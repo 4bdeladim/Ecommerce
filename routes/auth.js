@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 import nodemailer from "nodemailer"
 import bcrypt from "bcrypt"
 import User from "../models/user.js"
+import { v4 as uuidv4 } from 'uuid';
 
 const router = Router()
 router.post("/signup", async (req, res) => {
@@ -55,7 +56,7 @@ router.post("/signup", async (req, res) => {
                         })
                         newUser.save()
                             .then((user) => {
-                                res.status(200).json("Account created please check ur email for confirmation!") 
+                                res.status(200).json({message: "Account created please check ur email for confirmation!", email: email}) 
                                 return;
                             }).catch((err) => {
                                 res.status(500).json("Something went wrong!")
@@ -124,5 +125,93 @@ router.post("/signin", (req, res) => {
 })
 
 
+router.post("/sendrecoverylink", async(req, res) => {
+    try {
+        const {email} = req.body
+        if(!email) {
+            res.status(404).json("Invalid email")
+            return;
+        }
+        User.findOne({email}, async(err, user) => {
+            if(!user) {
+                res.status(404).json("No user with this email")
+                return;
+            }
+            const RANDOM = uuidv4()
+            const LINK = `${process.env.DOMAIN}/recover/${email}/${RANDOM}`
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.PASSWORD
+                }
+            })
+            const options = {
+                from: process.env.EMAIL,
+                to: email,
+                subject: "Recover your account",
+                html: `<a href="${LINK}">Recover your account</a>`
+            }
+            transporter.sendMail(options, (err) => {
+                if(err) {
+                    res.status(404).json("Something went wrong!")
+                }
+                user.recoveryCode = RANDOM
+                return;
+            })
+            await user.save()
+            res.status(200).json("Check your email for the link")
+                
+        })
+    } catch (error) {
+        res.status(500).json("Something went wrong")
+    }
+})
 
+router.post("/checklink", (req, res) => {
+    const {code, email} = req.body
+    if(!code || !email) {
+        res.status(404).json("Missing informations")
+        return;
+    }
+    User.findOne({email}, (err, user) => {
+        if(!user) {
+            res.status(404).json("User not found")
+            return;
+        }
+        else if (user.recoveryCode !== code) {
+            res.status(404).json("Invalid link")
+            return;
+        } 
+        res.status(200).json("Valid link")
+        
+    })
+})
+
+
+router.post("/changepassword", (req, res) => {
+    try {
+        const {newPassword, email, recoveryCode} = req.body
+        if(!newPassword || !email, !recoveryCode) {
+            res.status(404).json("Missing informations")
+            return;
+        }
+        User.findOne({email}, async(err, user) => {
+            if(!user) {
+                res.status(404).json("No user found")
+                return;
+            }
+            else if (user.recoveryCode !== recoveryCode) {
+                res.status(404).json("Invalid link")
+                return; 
+            }
+            const hashedPassword = bcrypt.hash(newPassword, 10)
+            user.password = hashedPassword
+            await user.save();
+            res.status(200).json("Password changed")
+        })
+    } catch (error) {
+        res.status(500).json("Something went wrong")
+    }
+})
 export default router

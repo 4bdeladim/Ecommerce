@@ -12,7 +12,7 @@ import { PinInput, PinInputField } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { verify } from '../redux/auth';
+import { verify } from '../redux/actions/auth';
 
 export default function VerifyEmail() {
     const dispatch = useDispatch()
@@ -65,11 +65,11 @@ export default function VerifyEmail() {
             </FormControl>
             <Stack spacing={6}>
             <Button
-                bg={'blue.400'}
+                bg={'red.400'}
                 onClick={() => dispatch(verify({email, code}))}
                 color={'white'}
                 _hover={{
-                bg: 'blue.500',
+                bg: 'pink.300',
                 }}>
                 Verify
             </Button>

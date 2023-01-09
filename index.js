@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 import mongoose from "mongoose"
 import auth from "./routes/auth.js"
 dotenv.config();
-const app = express();
+const app = express();  
 const PORT = process.env.PORT || 8888;
 const DATABASE_URL = process.env.DATABASE_URL
 

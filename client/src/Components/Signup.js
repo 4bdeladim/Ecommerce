@@ -15,15 +15,13 @@ import {
 import {useState} from "react"
 import { useDispatch } from 'react-redux';
  import {Link} from "react-router-dom" 
-import { sign_up } from '../redux/auth';
+import { signUp } from '../redux/actions/auth';
 export default function Signup() {
     const [email, setemail] = useState("")
     const [username, setusername] = useState("")
     const [password, setpassword] = useState("")
     const dispatch = useDispatch();
-    const Signup = () => {
-      dispatch(sign_up({email, username, password}))
-    }
+    
     return (
       <Flex
         minH={"calc(100vh - 70px)"}
@@ -62,7 +60,7 @@ export default function Signup() {
                 <Button
                   bg={'red.400'}
                   color={'white'}
-                  onClick={() => Signup()}
+                  onClick={() => dispatch(signUp({email, username, password}))}
                   _hover={{
                     bg: 'pink.300',
                   }}>

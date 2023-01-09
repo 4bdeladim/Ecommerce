@@ -4,7 +4,6 @@ import {
     FormControl,
     FormLabel,
     Input,
-    Checkbox,
     Stack,
     Button,
     Heading,
@@ -14,11 +13,13 @@ import {
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {Link } from "react-router-dom"
-import { sign_in } from '../redux/auth';
+import { signIn} from '../redux/actions/auth';
 export default function Signin() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const dispatch = useDispatch()
+
+
     return (
       <Flex
         minH={'calc(100vh - 70px)'}
@@ -54,7 +55,7 @@ export default function Signin() {
                 <Button
                   bg={'red.400'}
                   color={'white'}
-                  onClick={() => dispatch(sign_in({email, password}))}
+                  onClick={() => dispatch(signIn({email, password}))}
                   _hover={{
                     bg: 'pink.300',
                   }}>
