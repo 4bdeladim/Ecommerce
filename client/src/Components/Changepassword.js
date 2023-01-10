@@ -8,7 +8,7 @@ import {
     Stack,
     useColorModeValue,
   } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { changePassword, checkRecoveryLink } from '../redux/actions/auth';
@@ -18,11 +18,9 @@ export default function ChangePasswordForm() {
     
     const {email, code} = useParams()
     const [password, setPassword] = useState("")
-    const check = false
     const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(checkRecoveryLink({email, code}))
-    }, [])
+    
+    
     return (
       <Flex
         minH={'100vh'}

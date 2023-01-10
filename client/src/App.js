@@ -9,15 +9,23 @@ import ForgotPasswordForm from './Components/Forgot';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import Products from './Components/Products';
 import VerifyEmail from './Components/Verify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ChangePasswordForm from './Components/Changepassword';
+import CheckLink from './Components/CheckLink';
+import { Suspense, useEffect } from 'react';
+import { CheckLogin } from './redux/actions/auth';
 
 function App() {
   const { colorMode, toggleColorMode } = useColorMode();
   const {loading} = useSelector(state => state.auth)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(CheckLogin())
+    return () => {}
+  }, [])
   
   return (
-
+    
     <Flex minHeight="100vh" alignItems="center" justifyContent="center" flexDirection="column" w="100vw" maxW="100%" >
       {
         loading ? (
@@ -37,7 +45,8 @@ function App() {
               <Route path="/forgot" element={<ForgotPasswordForm />} />
               <Route path="/products/:category" element={<Products />} />
               <Route path="/verify/:email" element={<VerifyEmail/>} />
-              <Route path="/recover/:email/:code" element={<ChangePasswordForm />} />
+              <Route path="/recover/:email/:code" element={<CheckLink />} />
+              <Route path="/changepassword/:email/:code" element={<ChangePasswordForm />} /> 
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Flex>

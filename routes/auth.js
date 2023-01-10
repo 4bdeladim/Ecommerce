@@ -6,6 +6,24 @@ import User from "../models/user.js"
 import { v4 as uuidv4 } from 'uuid';
 
 const router = Router()
+
+
+router.get("/signin", (req, res) => {
+    try {
+        const token = req.cookies[process.env.COOKIE_NAME]
+        if(!token) res.status(401).json('Invalid token')
+        else { 
+            const decoded = jwt.verify(token, process.env.JWT_KEY)
+            User.findById(decoded.id, (err, user) => {
+                if(!user) res.status(500)
+                res.status(200).json(user.username)
+            })
+        }
+    } catch(error) {
+        
+        res.status(501).json('Something went wrong')
+    }
+})
 router.post("/signup", async (req, res) => {
     
     try {
@@ -156,9 +174,9 @@ router.post("/sendrecoverylink", async(req, res) => {
                 if(err) {
                     res.status(404).json("Something went wrong!")
                 }
-                user.recoveryCode = RANDOM
                 return;
             })
+            user.recoveryCode = RANDOM
             await user.save()
             res.status(200).json("Check your email for the link")
                 
@@ -205,7 +223,7 @@ router.post("/changepassword", (req, res) => {
                 res.status(404).json("Invalid link")
                 return; 
             }
-            const hashedPassword = bcrypt.hash(newPassword, 10)
+            const hashedPassword = await bcrypt.hash(newPassword, 10)
             user.password = hashedPassword
             await user.save();
             res.status(200).json("Password changed")

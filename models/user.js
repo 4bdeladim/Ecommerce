@@ -36,6 +36,7 @@ const UserSchema = new Schema({
     },
     recoveryCode: {
         type: String,
+        default: null
     }
 })
 

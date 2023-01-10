@@ -59,7 +59,7 @@ export const checkRecoveryLink = createAsyncThunk(
         try {
             const {email, code} = info
             const response = await api.APIcheckRecoveryLink(email, code)
-            return response.data
+            return {email, code}
         } catch (error) {
             throw error.response.data || "Something went wrong"
         }
@@ -72,6 +72,18 @@ export const changePassword = createAsyncThunk(
         try {
             const {email, code, password} = info
             const response = await api.APIchangepassword(email, code, password)
+            return response.data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const CheckLogin = createAsyncThunk(
+    "auth/checklogin",
+    async() => {
+        try {
+            const response = await api.APIcheckLogin()
             return response.data
         } catch (error) {
             throw error.response.data || "Something went wrong"

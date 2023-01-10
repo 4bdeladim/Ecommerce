@@ -1,7 +1,7 @@
 import { createSlice, isFulfilled, isRejected, isPending} from '@reduxjs/toolkit'
 import * as api from '../api'
 import Swal from 'sweetalert2'
-import {signIn,verify,signUp, sendRecoveryLink, checkRecoveryLink, changePassword} from "./actions/auth"
+import {signIn,verify,signUp, sendRecoveryLink, checkRecoveryLink, changePassword, CheckLogin} from "./actions/auth"
 
 
 const initialState = {
@@ -18,6 +18,28 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            //Check if user logged in
+            .addMatcher(
+                isFulfilled(CheckLogin), (state, action) => {
+                    state.loading = false
+                    state.username = action.payload
+                    state.loggedIn = true
+                } 
+            )
+            .addMatcher(
+                isRejected(CheckLogin), (state, action) => {
+                    state.loading = false
+                    state.username = action.payload
+                    state.loggedIn = true
+                } 
+            )
+            .addMatcher(
+                isPending(CheckLogin), (state, action) => {
+                    state.loading = false
+                } 
+            )
+
+            //Sign in 
             .addMatcher(
                 isFulfilled(signIn), (state, action) => {
                     state.loading = false
@@ -39,6 +61,7 @@ export const authSlice = createSlice({
             .addMatcher(
                 isPending(signIn), (state, action) => {
                     state.loading = true
+                    console.log("RUN")
                 }
             )
             //Sign up reducers
@@ -119,7 +142,13 @@ export const authSlice = createSlice({
             )
 
             //Check recovering link
-
+            .addMatcher(
+                isFulfilled(checkRecoveryLink), (state, action) => {
+                    state.loading = false
+                    const {email, code} = action.payload
+                    window.location.replace(`/changepassword/${email}/${code}`)
+                }
+            )
             .addMatcher(
                 isRejected(checkRecoveryLink), (state, action) => {
                     state.loading = false
