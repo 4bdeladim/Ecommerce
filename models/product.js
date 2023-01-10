@@ -11,17 +11,21 @@ const ProductSchema = new Schema({
         required: true
     },
     price: {
-        type:String,
+        type:Number,
         required: true
     },
-    categoryID: {
+    category: {
         type:String,
         required:true
     },
-    typeID: {
-        type:String,
-        required:true
-    }
+    sales: {
+        type:Number,
+        default: 0
+    },
+    dateCreated: {
+        type: Date,
+        default: new Date()
+    },
 })
 
 const Product = model("Product", ProductSchema);
