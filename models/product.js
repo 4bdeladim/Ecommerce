@@ -6,7 +6,7 @@ const ProductSchema = new Schema({
         type:String,
         required:true
     },
-    descreption: {
+    description: {
         type:String,
         required: true
     },
@@ -26,6 +26,9 @@ const ProductSchema = new Schema({
         type: Date,
         default: new Date()
     },
+    img: {
+        type:String
+    }
 })
 
 const Product = model("Product", ProductSchema);

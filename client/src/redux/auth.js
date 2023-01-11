@@ -1,5 +1,4 @@
 import { createSlice, isFulfilled, isRejected, isPending} from '@reduxjs/toolkit'
-import * as api from '../api'
 import Swal from 'sweetalert2'
 import {signIn,verify,signUp, sendRecoveryLink, checkRecoveryLink, changePassword, CheckLogin} from "./actions/auth"
 

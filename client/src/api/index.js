@@ -7,3 +7,6 @@ export const APIsendRecoveryLink = (email) => axios.post(`/api/sendrecoverylink`
 export const APIcheckRecoveryLink = (email, code) => axios.post(`/api/checklink`, {email, code})
 export const APIchangepassword = (email, code, password) => axios.post(`/api/changepassword`, {email, recoveryCode:code, newPassword:password})
 export const APIcheckLogin = () => axios.get("/api/signin") 
+export const APIgetPopularProducts = () => axios.get("/api/products/popular")
+export const APIaddNewProduct = (name, descreption, price, category, image) => axios.post("/api/products", {name, descreption, price, category, image})
+export const APIgetproducts = (page, category, sort, min, max) => axios.get(`/api/products?page=${page}&category=${category}&sort=${sort}&min=${min}&max=${max}`)

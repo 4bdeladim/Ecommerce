@@ -1,33 +1,43 @@
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { Button, Flex, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Select, Stack, Text, useMediaQuery } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { GetProducts } from '../redux/actions/products'
 import Product from './Product'
 
 const Products = () => {
+  
+  
   const {category} = useParams()
   const item = {
     category: "jewelery",
-    title: "White Gold Plated Princess",
-    descreption: "lassic Created Wedding Engagement Solitaire Diamond Promise Ring for Her. Gifts to spoil your love more for Engagement, Wedding, Anniversary, Valentine's Day...",
-    imageURL: "/assets/ring.jpg",
+    name: "White Gold Plated Princess",
+    description: "lassic Created Wedding Engagement Solitaire Diamond Promise Ring for Her. Gifts to spoil your love more for Engagement, Wedding, Anniversary, Valentine's Day...",
+    img: "/assets/ring.jpg",
     price: "9.99"
   }
-  const [pages, setPages] = useState([1, 2, 3, 4]);
+  const {pages} = useSelector(state => state.products) || []
+  const [categorySelected, setcategorySelected] = useState(category)
+  const {products} = useSelector(state => state.products)
+  const [sort, setsort] = useState("A-Z")
   const [selected, setSelected] = useState(1)
   const items = new Array(10).fill(item)
   const [priceRange, setPriceRange] = useState([0, 2000])
   const [issmallerthan870] = useMediaQuery("(max-width:870px)")
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(GetProducts({page: selected, sort, category:categorySelected, min: priceRange[0], max: priceRange[1]})) 
+    return () => {}
+  }, [selected, categorySelected, sort, priceRange])
   const next = () => {
     setSelected(selected + 1)
     const newPages = pages.map(p => p+1)
-    setPages(newPages)
     setSelected(selected + 1)
   }
   const back = () => {
     setSelected(selected - 1)
     const newPages = pages.map(p => p - 1)
-    setPages(newPages)
     setSelected(selected - 1)
   }
 
@@ -40,7 +50,7 @@ const Products = () => {
       <Flex flexWrap="wrap" gap="1rem" w="100%" my="2rem" justifyContent="space-around" alignItems="center">
         <Flex  flexDirection="column" justifyContent="flex-start">
           <Text>Category:</Text>
-          <Select defaultValue={category}>
+          <Select defaultValue={categorySelected} onChange={(e) => setcategorySelected(e.target.value)}>
             <option value="all">All</option>
             <option value="men">Men</option>
             <option value="women">Women</option>
@@ -50,11 +60,11 @@ const Products = () => {
         </Flex>
         <Flex  flexDirection="column" justifyContent="flex-start">
           <Text>Sort:</Text>
-          <Select m="0">
-            <option value="a-z">A-Z</option>
-            <option value="z-a">Z-A</option>
-            <option value="h-l">Price: H-L</option>
-            <option value="l-h">Price: L-H</option>
+          <Select m="0" onChange={(e) => setsort(e.target.value)}>
+            <option value="A-Z">A-Z</option>
+            <option value="Z-A">Z-A</option>
+            <option value="H-L">Price: H-L</option>
+            <option value="L-H">Price: L-H</option>
             <option value="hr">Heighest rating</option>
           </Select>
         </Flex>
@@ -62,7 +72,14 @@ const Products = () => {
           <Text>
             Price:
           </Text>
-          <RangeSlider colorScheme="red" onChangeEnd={(val) => setPriceRange(val)} w="100%" aria-label={['min', 'max']} min="0" max="2000" defaultValue={[0, 2000]}>
+          <RangeSlider
+            aria-label={['min', 'max']}
+            colorScheme='red'
+            min={0}
+            max={2000}
+            defaultValue={[0, 2000]}
+            onChangeEnd={(e) => setPriceRange(e)}
+          >
             <RangeSliderTrack>
               <RangeSliderFilledTrack />
             </RangeSliderTrack>
@@ -78,8 +95,8 @@ const Products = () => {
       </Flex>
       <Flex gap="1rem" flexWrap="wrap" justifyContent="center">
         { 
-                items.map((el) => (
-                    <Product data={el}  />
+                products.map((el) => (
+                    <Product key={el._id} product={el}  />
                 ))
             }
       </Flex>

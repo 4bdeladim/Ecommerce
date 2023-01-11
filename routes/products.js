@@ -14,26 +14,22 @@ router.get("/products", async(req, res) => {
     try {
         const { page, sort, category, min, max } = req.query
         const s = sort === "A-Z" ? {name: "asc"} : (sort === "Z-A" ? {name: "desc"} : (sort === "H-L" ? {price: "desc"}: (sort === "L-H" ? {price:"asc"} : (sort === "popular" ? {sales: "desc"} : {name: "desc"}))) )
-        const products = await Product.find({category}).where("price").gt(parseInt(max)).lt(parseInt(min)).sort(s)
+        const cat = ["men", "women", "electronics", "jewelery"].indexOf(category) !== -1 ? category : null
+        const products = await Product.find(cat ? {category: cat} : {}).where("price").gt(parseInt(min)).lt(parseInt(max)).sort(s)
         if(products.length < 15){
             res.status(200).json({products, pages: 1})
             return;
         }
-        res.status(200).json({products, pages: Math.ceil(products.length / 15)})
+        res.status(200).json({products: products.slice((15 * (page - 1)),(15 * page) ), pages: Math.ceil(products.length / 15)})
     } catch (error) {
         res.status(404).json("Something went wrong")
     }
 })
 
-router.get("/products/popular", (req, res) => {
+router.get("/products/popular", async(req, res) => {
     try {
-        Product.find({}).sort({sales: "desc"}, (err, products) => {
-            if(!products){
-                res.status(404).json("No products found")
-                return;
-            }
-            res.status(200).json(products.slice(0, 16))
-        })
+        const products = await Product.find({}).sort({sales: "desc"})
+        res.status(200).json(products.slice(0, 16))
     } catch (error) {
         res.status(500).json("Something went wrong")
     }
@@ -42,10 +38,10 @@ router.get("/products/popular", (req, res) => {
 
 router.post("/products", async(req, res) => {
     try {
-        const {name, descreption, price, category} = req.body
-        const newProduct = new Product({name, descreption, price, category})
+        const {name, description, price, category, image} = req.body
+        const newProduct = new Product({name, description, price, category, img:image})
         await newProduct.save()
-        res.status()
+        res.status(200).json("item added")
     } catch (error) {
         res.status(500).json("Something went wrong")
     }
