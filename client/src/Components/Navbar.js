@@ -25,11 +25,23 @@ import {
 } from '@chakra-ui/icons';
 import { useLocation } from 'react-router-dom';
 import Cart from './Cart';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {GetCategories} from "../redux/actions/products"
 
 
 export default function Navbar() {
+  
+  
+  const linkColor = useColorModeValue('gray.600', 'gray.200');
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(GetCategories())
+    return () =>{}
+  }, [])
+  const linkHoverColor = useColorModeValue('gray.800', 'white');
+  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
+  const {categories} = useSelector(state => state.products) 
   const [ isCartOpen, setIsCartOpen ] = useState(false)
   const { isOpen, onToggle } = useDisclosure();
   const location = useLocation()
@@ -71,7 +83,77 @@ export default function Navbar() {
           </Text>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-            <DesktopNav />
+          <Stack direction={'row'} spacing={4}>
+            <Box>
+              {
+                location.pathname.split("/")[1] === "products" ? "" : (
+                  <Popover trigger={'hover'} placement={'bottom-start'}>
+                <PopoverTrigger>
+                  
+                  <Link
+                    p={2}
+                    to={"/products/all" ?? '/'}
+                    fontSize={'sm'}
+                    fontWeight={500}
+                    color={linkColor}
+                    _hover={{
+                      textDecoration: 'none',
+                      color: linkHoverColor,
+                    }}>
+                    
+                    Products
+                  </Link>
+                </PopoverTrigger>
+
+              
+                  <PopoverContent
+                    border={0}
+                    boxShadow={'xl'}
+                    bg={popoverContentBgColor}
+                    p={4}
+                    rounded={'xl'}
+                    minW={'sm'}>
+                    <Stack>
+                      {categories.map((child) => (
+                        <Link
+                        key={child._id}
+                          to={`/products/${child.name}`}
+                          role={'group'}
+                          display={'block'}
+                          p={2}
+                          rounded={'md'}
+                          _hover={{ bg: "pink.300" }}>
+                          <Stack direction={'row'} align={'center'}>
+                            <Box>
+                              <Text
+                                transition={'all .3s ease'}
+                                _groupHover={{ color: 'pink.400' }}
+                                fontWeight={500}>
+                                {child.name.charAt(0).toUpperCase() + child.name.slice(1)}
+                              </Text>
+                            </Box>
+                            <Flex
+                              transition={'all .3s ease'}
+                              transform={'translateX(-10px)'}
+                              opacity={0}
+                              _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
+                              justify={'flex-end'}
+                              align={'center'}
+                              flex={1}>
+                              <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
+                            </Flex>
+                          </Stack>
+                        </Link>
+                      ))}
+                    </Stack>
+                  </PopoverContent> 
+              </Popover>
+                )
+              }
+              
+            </Box>
+
+            </Stack>
           </Flex>
         </Flex>
 
@@ -116,202 +198,91 @@ export default function Navbar() {
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <Stack
+          bg={useColorModeValue('white', 'gray.800')}
+          p={4}
+          display={{ md: 'none' }}>
+            <Flex flexDirection="column" gap="1rem" spacing={4} onClick={categories && onToggle}>
+              {
+                location.pathname.split("/")[1] === "products" ? ""  : (
+                  <Flex flexDirection="column" w="100%">
+                    <Flex
+                      py={2}
+                      as={Link}
+                      to={'/products/all'}
+                      justify={'space-between'}
+                      align={'center'}
+                      _hover={{
+                        textDecoration: 'none',
+                      }}>
+                      <Text
+                        fontWeight={600}
+                        color="gray.600">
+                        Products
+                      </Text>
+                      {categories && (
+                        <Icon
+                          as={ChevronDownIcon}
+                          transition={'all .25s ease-in-out'}
+                          transform={isOpen ? 'rotate(180deg)' : ''}
+                          w={6}
+                          h={6}
+                        />
+                      )}
+                      
+                    </Flex>
+                    <Collapse in={isOpen} animateOpacity style={{ marginTop: '0!important' }}>
+                      <Stack
+                        mt={2}
+                        pl={4}
+                        borderLeft={1}
+                        borderStyle={'solid'}
+                        borderColor="gray.200"
+                        align={'start'}>
+                        {categories.map((cat) => (
+                            <Link key={cat._id} py={2} to={"/products/"+cat.name}>
+                              {cat.name}
+                            </Link>
+                          ))}
+
+                        
+                        
+                      </Stack>
+                    </Collapse>
+                  </Flex>
+                )
+              }
+              
+              <Button
+      
+                    w="100px"
+                    as={Link}
+                    fontSize={'sm'}
+                    fontWeight={600}
+                    variant={'link'}
+                    color={'white'}
+                    bg={'pink.400'}
+                    p=".7rem 1rem"
+                    textDecoration="none"
+                    to={'/signin'}
+                    _hover={{
+                      bg: 'pink.300',
+                    }}
+                    >
+                    Sign In
+                </Button>
+
+              
+            </Flex>
+        </Stack>
       </Collapse>
     </Box>
   );
 }
 
-const DesktopNav = () => {
-  const linkColor = useColorModeValue('gray.600', 'gray.200');
-  const linkHoverColor = useColorModeValue('gray.800', 'white');
-  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
-
-  return (
-    <Stack direction={'row'} spacing={4}>
-      {NAV_ITEMS.map((navItem) => (
-        <Box key={navItem.label}>
-          <Popover trigger={'hover'} placement={'bottom-start'}>
-            <PopoverTrigger>
-              <Link
-                p={2}
-                to={navItem.to ?? '/'}
-                fontSize={'sm'}
-                fontWeight={500}
-                color={linkColor}
-                _hover={{
-                  textDecoration: 'none',
-                  color: linkHoverColor,
-                }}>
-                {navItem.label}
-              </Link>
-            </PopoverTrigger>
-
-            {navItem.children && (
-              <PopoverContent
-                border={0}
-                boxShadow={'xl'}
-                bg={popoverContentBgColor}
-                p={4}
-                rounded={'xl'}
-                minW={'sm'}>
-                <Stack>
-                  {navItem.children.map((child) => (
-                    <DesktopSubNav key={child.label} {...child} />
-                  ))}
-                </Stack>
-              </PopoverContent>
-            )}
-          </Popover>
-        </Box>
-      ))}
-    </Stack>
-  );
-};
-
-const DesktopSubNav = ({ label, to, subLabel }) => {
-  return (
-    <Link
-      to={to}
-      role={'group'}
-      display={'block'}
-      p={2}
-      rounded={'md'}
-      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}>
-      <Stack direction={'row'} align={'center'}>
-        <Box>
-          <Text
-            transition={'all .3s ease'}
-            _groupHover={{ color: 'pink.400' }}
-            fontWeight={500}>
-            {label}
-          </Text>
-          <Text fontSize={'sm'}>{subLabel}</Text>
-        </Box>
-        <Flex
-          transition={'all .3s ease'}
-          transform={'translateX(-10px)'}
-          opacity={0}
-          _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-          justify={'flex-end'}
-          align={'center'}
-          flex={1}>
-          <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
-        </Flex>
-      </Stack>
-    </Link>
-  );
-};
-
-const MobileNav = () => {
-  return (
-    <Stack
-      bg={useColorModeValue('white', 'gray.800')}
-      p={4}
-      display={{ md: 'none' }}>
-      {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
-      ))}
-    </Stack>
-  );
-};
-
-const MobileNavItem = ({ label, children, to }) => {
-  const { isOpen, onToggle } = useDisclosure();
-
-  return (
-    <Flex flexDirection="column" gap="1rem" spacing={4} onClick={children && onToggle}>
-      <Flex
-        py={2}
-        as={Link}
-        to={to ?? '/'}
-        justify={'space-between'}
-        align={'center'}
-        _hover={{
-          textDecoration: 'none',
-        }}>
-        <Text
-          fontWeight={600}
-          color={useColorModeValue('gray.600', 'gray.200')}>
-          {label}
-        </Text>
-        {children && (
-          <Icon
-            as={ChevronDownIcon}
-            transition={'all .25s ease-in-out'}
-            transform={isOpen ? 'rotate(180deg)' : ''}
-            w={6}
-            h={6}
-          />
-        )}
-        
-      </Flex>
-      <Collapse in={isOpen} animateOpacity style={{ marginTop: '0!important' }}>
-        <Stack
-          mt={2}
-          pl={4}
-          borderLeft={1}
-          borderStyle={'solid'}
-          borderColor={useColorModeValue('gray.200', 'gray.700')}
-          align={'start'}>
-          {children &&
-            children.map((child) => (
-              <Link key={child.label} py={2} to={child.to}>
-                {child.label}
-              </Link>
-            ))}
-
-          
-          
-        </Stack>
-      </Collapse>
-      <Button
-            w="100px"
-            as={'a'}
-            fontSize={'sm'}
-            fontWeight={600}
-            variant={'link'}
-            color={'white'}
-            bg={'pink.400'}
-            p=".7rem 1rem"
-            textDecoration="none"
-            to={'/'}
-            _hover={{
-              bg: 'pink.300',
-            }}
-            >
-            Sign In
-        </Button>
-
-      
-    </Flex>
-  );
-};
 
 
 
-const NAV_ITEMS = [
-  {
-    label: 'Products',
-    to: "/products/all",
-    children: [
-      {
-        label: 'Men',
-        to: '/products/men',
-      },
-      {
-        label: 'Women',
-        to: '/products/women',
-      },
-      {
-        label: "Kids",
-        to: "/products/kids"
-      },
-      {
-        label: "Jewelery",
-        to: "/products/jewelery"
-      }
-    ],
-  },
-  
-];
+
+
+

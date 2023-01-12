@@ -7,7 +7,6 @@ import Top from '../Components/Top'
 import {useDispatch, useSelector} from "react-redux"
 import { GetPopularProducts } from '../redux/actions/products'
 const Home = () => {
-  const [isSmallerthan767] = useMediaQuery("(max-width:767px)")
   const { popular } = useSelector(state => state.products)
   const dispatch = useDispatch()
   useEffect(() => {
@@ -23,7 +22,7 @@ const Home = () => {
             <Top products={popular} />
         </Flex>
         <Footer />
-    </Container>
+    </Container>  
     
   )
 }

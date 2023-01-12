@@ -26,6 +26,30 @@ export const GetProducts = createAsyncThunk(
         }
     }
 )
+export const GetProduct = createAsyncThunk(
+    "products/singleproduct",
+    async (info, thunkAPI) => {
+        try {
+            const {id} = info
+            const response = await api.APIgetProduct(id)
+            return response.data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const GetCategories = createAsyncThunk(
+    "products/categories",
+    async (info, thunkAPI) => {
+        try {
+            const response = await api.APIgetCategories();
+            return response.data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
 export const AddNewProduct = createAsyncThunk(
     "products/add",
     async (info, thunkAPI) => {

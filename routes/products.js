@@ -17,6 +17,10 @@ router.get("/products", async(req, res) => {
         const cat = ["men", "women", "electronics", "jewelery"].indexOf(category) !== -1 ? category : null
         const products = await Product.find(cat ? {category: cat} : {}).where("price").gt(parseInt(min)).lt(parseInt(max)).sort(s)
         if(products.length < 15){
+            if(products.length === 0) {
+                res.status(200).json({products, pages:0})
+                return;
+            }
             res.status(200).json({products, pages: 1})
             return;
         }
@@ -25,7 +29,16 @@ router.get("/products", async(req, res) => {
         res.status(404).json("Something went wrong")
     }
 })
-
+router.get("/singleproduct/:id", async (req, res) => {
+    try {
+        const {id} = req.params 
+        console.log(id)
+        const product = await Product.findById(id)
+        res.status(200).json(product)
+    } catch (error) {
+        res.status(500).json("Something went wrong")
+    }
+})
 router.get("/products/popular", async(req, res) => {
     try {
         const products = await Product.find({}).sort({sales: "desc"})

@@ -6,7 +6,7 @@ import Product from './Product'
 const Top = ({products}) => {
     const productsdata = products[0] || []
   return (
-    <Flex  w="100%"  flexDirection="column">   
+    <Flex w="100%"  flexDirection="column">   
         <Text textAlign="center" fontSize="3rem" fontWeight="600">Top products</Text>
         <Flex my="2rem"  justifyContent="center" w="100%" flexDirection="row" gap="2rem" flexWrap="wrap">
             {
