@@ -21,7 +21,7 @@ export const authSlice = createSlice({
             state.loading = false
             state.username = action.payload
             state.loggedIn = true
-           
+            state.cart = action.payload.cart
         },
         [CheckLogin.rejected]: (state, action) => {
             state.loading = false

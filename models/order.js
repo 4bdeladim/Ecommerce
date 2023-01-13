@@ -6,7 +6,7 @@ const OrderSchema = new Schema({
         type:String,
         required: true
     },
-    quanitity: {
+    quantity: {
         type: Number,
         required: true
     },
@@ -18,7 +18,10 @@ const OrderSchema = new Schema({
         type:Number,
         required: true
     },
-    date: new Date(),
+    date: {
+        type: Date,
+        default: new Date(),
+    },
     userID: {
         type:String,
         required: true

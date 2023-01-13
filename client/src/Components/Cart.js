@@ -1,4 +1,5 @@
 
+import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
     Drawer,
     DrawerBody,
@@ -9,16 +10,30 @@ import {
     DrawerCloseButton,
     Button,
     Input,
-    useDisclosure
+    useDisclosure,
+    Box,
+    Flex,
+    Image,
+    Card,
+    Text
 } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { GetCart } from '../redux/actions/products';
+import CartCard from './CartCard';
 export default function Cart({opened}) {
+  const dispatch = useDispatch();
     useEffect(() => {
         if(opened) onOpen();
     }, [opened])
-    
+
+    useEffect(() => {
+      dispatch(GetCart())
+    }, [])
+    const {cart, cartLoading} = useSelector(state => state.products) || JSON.parse(localStorage.getItem("cart"))
+    const {loggedIn} = useSelector(state => state.auth)
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const btnRef = useRef()
   
     return (
       <>
@@ -29,19 +44,21 @@ export default function Cart({opened}) {
           onClose={onClose}
         >
           <DrawerOverlay />
-          <DrawerContent>
+          <DrawerContent w="100%" >
             <DrawerCloseButton mt=".5rem" />
             <DrawerHeader>Your cart</DrawerHeader>
   
-            <DrawerBody>
-              <Input placeholder='Type here...' />
+            <DrawerBody w="100%" >
+              {
+                cart.map(e => <CartCard key={e.productId} data={e} />)
+              }
             </DrawerBody>
   
             <DrawerFooter>
               <Button variant='outline' mr={3} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme='red'>Save</Button>
+              <Button as={Link} to="/checkout" colorScheme='red'>Checkout</Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

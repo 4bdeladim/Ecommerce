@@ -1,16 +1,29 @@
 import { ViewIcon } from '@chakra-ui/icons';
-import { Card,Button,ButtonGroup,Divider, Stack, Image, Heading, Text,  CardBody, CardFooter } from '@chakra-ui/react'
+import { Card,Button,ButtonGroup,Divider, Stack, Image, Heading, Text,  CardBody, CardFooter, useDisclosure } from '@chakra-ui/react'
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {Link} from "react-router-dom"
+import { AddToCart } from '../redux/actions/products';
 
   
 function Product({product}) {
     const [hovered, sethovered] = useState(false)
+    const dispatch = useDispatch()
+    const {loggedIn} = useSelector(state => state.auth)
+    const addToCart = () => {
+      if(!loggedIn){
+        let cart = Array.isArray(JSON.parse(localStorage.getItem("cart"))) ? JSON.parse(localStorage.getItem("cart")) : []
+        cart.push({productId: product._id, productImg: product.img, quantity: 1})
+        localStorage.setItem("cart", JSON.stringify(cart))
+        return;
+      }
+      dispatch(AddToCart({productId: product._id, productImg: product.img, quantity: 1}))
+    }
     return (
-      <Card position="relative" boxShadow="xs" maxW='sm' >
+      <Card cursor="pointer" onMouseLeave={() => sethovered(false)} onMouseEnter={() => sethovered(true)} position="relative" boxShadow="xs" maxW='sm' >
         {hovered ? (
           <Stack as={Link} to={`/singleproduct/${product._id}`} cursor="pointer" _hover={{bg: "pink.300"}} position="absolute" borderBottomRadius="50%" borderTopRadius="50%" top="1rem" right="1rem" bg="red.400" padding=".5rem .5rem">
-            <ViewIcon  color="white" />
+            <ViewIcon color="white" />
           </Stack>
         ) : ""}
 
@@ -38,7 +51,7 @@ function Product({product}) {
         <Divider />
         <CardFooter>
           <ButtonGroup spacing='2'>
-            <Button variant='solid' colorScheme='red'>
+            <Button onClick={() => addToCart()}  variant='solid' colorScheme='red'>
               Add to cart
             </Button>
             

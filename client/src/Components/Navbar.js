@@ -14,6 +14,8 @@ import {
   useBreakpointValue,
   useDisclosure,
   useMediaQuery,
+  AvatarBadge,
+  Avatar,
 } from '@chakra-ui/react';
 import {Link} from "react-router-dom"
 import {CiShoppingCart} from "react-icons/ci"
@@ -44,6 +46,7 @@ export default function Navbar() {
   const {categories} = useSelector(state => state.products) 
   const [ isCartOpen, setIsCartOpen ] = useState(false)
   const { isOpen, onToggle } = useDisclosure();
+  const {loggedIn} = useSelector(state => state.auth)
   const location = useLocation()
   const [isSmallerthan767] = useMediaQuery("(max-width: 767px)")
   
@@ -161,32 +164,42 @@ export default function Navbar() {
           gap="1rem"
           
           justify={'flex-end'}
+          align="center"
           direction={'row'}
           spacing={6}>
 
+          {loggedIn ? (
+          <Avatar to="/account" as={Link} w="30px" h="30px" m="0" p="0">
+              
+          </Avatar>
+          ) : null}
+          {
+            !loggedIn ? (
+              <Button
+                w="110px"
+                py="10px"
+                as={Link}
+                display={isSmallerthan767 ? "none" : ""}
+                fontSize={'sm'}
+                fontWeight={600}
+                textAlign="center"
+                variant={'link'}
+                color={'white'}
+                bg={'red.400'}
+                
+                textDecoration="none"
+                to={location.pathname === "/signin" ? "/signup" : "/signin"}
+                _hover={{
+                  bg: 'pink.300',
+                }}
+                >
+                {location.pathname === "/signin" ? "Sign Up" : "Sign In"}
+              </Button>
+            ) : (null)
+          }
           
-          <Button
-            w="110px"
-            py="10px"
-            as={Link}
-            display={isSmallerthan767 ? "none" : ""}
-            fontSize={'sm'}
-            fontWeight={600}
-            textAlign="center"
-            variant={'link'}
-            color={'white'}
-            bg={'red.400'}
-            
-            textDecoration="none"
-            to={location.pathname === "/signin" ? "/signup" : "/signin"}
-            _hover={{
-              bg: 'pink.300',
-            }}
-            >
-            {location.pathname === "/signin" ? "Sign Up" : "Sign In"}
-          </Button>
           <CiShoppingCart 
-            fontSize="2.2rem"
+            fontSize="2.5rem"
             style={{marginTop:".2rem", padding:".5rem"}}
             cursor="pointer"
             onClick={() => setIsCartOpen(!isCartOpen)}

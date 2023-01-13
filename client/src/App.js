@@ -16,10 +16,13 @@ import { Suspense, useEffect } from 'react';
 import { CheckLogin } from './redux/actions/auth';
 import axios from 'axios';
 import SingleProduct from './pages/ProductPage';
+import Account from './pages/account';
+import Checkout from './pages/checkout';
 
 function App() {
   const { colorMode, toggleColorMode } = useColorMode();
   const {loading, loggedIn} = useSelector(state => state.auth)
+  const productsLoading = useSelector(state => state.products.loading)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(CheckLogin())
@@ -44,8 +47,10 @@ function App() {
             <Navbar /> 
             <Routes>
               <Route path="/" element={<Home />} /> 
+              {loggedIn ? <Route path="/checkout" element={<Checkout />} /> : null}
               {loggedIn ? null :<Route path="/signin" element={<Signin />} />}
               {loggedIn ? null :<Route path="/signup" element={<Signup />} />}
+              {loggedIn ? <Route path="/account" element={<Account />} /> : null}
               {loggedIn ? null :<Route path="/forgot" element={<ForgotPasswordForm />} />}
               {loggedIn ? null :<Route path="/verify/:email" element={<VerifyEmail/>} />}
               {loggedIn ? null :<Route path="/recover/:email/:code" element={<CheckLink />} />}

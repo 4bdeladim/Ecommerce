@@ -2,7 +2,7 @@ import {createAsyncThunk} from "@reduxjs/toolkit"
 import * as api from "../../api/index"
 export const signIn = createAsyncThunk(
     'auth/signin',
-    async (info, thunkAPI) => {
+    async (info) => {
         try {
             const {email, password} = info
             const response = await api.APIsignIn(email, password)
@@ -15,7 +15,7 @@ export const signIn = createAsyncThunk(
 
 export const signUp = createAsyncThunk(
     "auth/signup",
-    async (info, thunkAPI) => {
+    async (info) => {
         try {
             const {username, email, password} = info
             const response = await api.APIsignUp(username, email, password)
@@ -29,7 +29,7 @@ export const signUp = createAsyncThunk(
 
 export const verify = createAsyncThunk(
     "auth/verify",
-    async (info, thunkAPI) => {
+    async (info) => {
         try {
             const {email, code} = info
             const response = await api.APIverify(email, code)
@@ -42,7 +42,7 @@ export const verify = createAsyncThunk(
 
 export const sendRecoveryLink = createAsyncThunk(
     "auth/sendrecovery",
-    async (info, thunkAPI) => {
+    async (info) => {
         try {
             const {email} = info
             const response = await api.APIsendRecoveryLink(email)
@@ -55,7 +55,7 @@ export const sendRecoveryLink = createAsyncThunk(
 
 export const checkRecoveryLink = createAsyncThunk(
     "auth/checkrecoverylink",
-    async (info, thunkAPI) => {
+    async (info) => {
         try {
             const {email, code} = info
             const response = await api.APIcheckRecoveryLink(email, code)
@@ -68,7 +68,7 @@ export const checkRecoveryLink = createAsyncThunk(
 
 export const changePassword = createAsyncThunk(
     "auth/changepassword",
-    async (info, thunkAPI) => {
+    async (info) => {
         try {
             const {email, code, password} = info
             const response = await api.APIchangepassword(email, code, password)
