@@ -19,3 +19,4 @@ export const APIupdateCart = (productId, quantity) => axios.put("/api/cart", {pr
 export const APIgetOrders = () => axios.get("/api/orders")
 export const APInewOrder = () => axios.post("/api/orders")
 export const APIcancelOrder = (orderId) => axios.delete("/api/orders", {orderId})
+export const APIcheckout = () => axios.post("/api/checkout")

@@ -3,11 +3,15 @@ import jwt from "jsonwebtoken"
 import Order from "../models/order.js"
 import Product from "../models/product.js"
 import User from "../models/user.js"
+import login from "../middleware/login.js"
+import Stripe from "stripe"
+
+
 
 const router = Router()
 
 
-router.get("/orders", async(req, res) => {
+router.get("/orders", login, async(req, res) => {
     try {
         const token = req.cookies[process.env.COOKIE_NAME]
         if(!token) {
@@ -31,22 +35,32 @@ router.post("/orders", async(req, res) => {
         }
         const decoded = jwt.verify(token, process.env.JWT_KEY)
         const user = await User.findById(decoded.id)
-        user.cart.map(async(e) => {
-            const product = await Product.findById(e.productId)
-            const newOder = new Order({productID:product.id, quantity:e.quantity, productPrice: product.price, totalPrice: product.price * e.quantity, userID: decoded.id, status: "Pending" })
-            await newOder.save();
-        })
-        user.cart = []
-        await user.save()
-        res.status(200).json("Order")
+        const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
+        const session = await stripe.checkout.sessions.retrieve(
+            user.sessionId
+        );
+        if (session.payment_status === "paid") {
+            user.cart.map(async(e) => {
+                const product = await Product.findById(e.productId)
+                const newOder = new Order({productID:product.id, quantity:e.quantity, productPrice: product.price, totalPrice: product.price * e.quantity, userID: decoded.id, status: "Pending" })
+                await newOder.save();
+            })
+            user.cart = []
+            user.sessionId = null
+            await user.save()
+            res.status(200).json({ status: "success" });
+        } else {
+            user.sessionId = null
+            res.status(200).json({ status: "failed" });
+        }
+        
     } catch (error) {
-        console.log(error)
         res.status(500).json("Something went wrong")
     }
 })
 
 
-router.delete("/orders", async(req, res) => {
+router.delete("/orders", login, async(req, res) => {
     try {
         const {orderId} = req.body
         if(!orderId) {

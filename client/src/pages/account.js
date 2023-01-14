@@ -7,7 +7,6 @@ import { GetOrders } from '../redux/actions/products'
 const Account = () => {
     const {username} = useSelector(state => state.auth)
     const {orders} = useSelector(state => state.products)
-    console.log(orders)
     const dispatch = useDispatch()
     useEffect(() => {
       dispatch(GetOrders())
@@ -36,7 +35,7 @@ const Account = () => {
                 <Tbody>
                     {
                         orders.map(order => (
-                            <Tr>
+                            <Tr key={order._id}>
                                 <Td>{order._id}</Td>
                                 <Td>{new Date(order.date).toLocaleDateString("en-US")}</Td>
                                 <Td isNumeric>{order.productPrice}</Td>

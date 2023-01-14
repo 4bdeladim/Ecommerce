@@ -149,3 +149,15 @@ export const CancelOrder = createAsyncThunk(
         }
     }
 )
+
+export const Checkout = createAsyncThunk(
+    "products/checkout",
+    async () => {
+        try {
+            const { data } = await api.APIcheckout()
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)

@@ -1,5 +1,6 @@
 import {Router} from "express"
-import admin from "../middleware/auth.js";
+import admin from "../middleware/admin.js";
+import loggedIn from "../middleware/login.js"
 import Product from "../models/product.js";
 import User from "../models/user.js";
 

@@ -1,13 +1,13 @@
 import User from "../models/user.js"
 import jwt from "jsonwebtoken"
 import {Router} from "express"
-
+import login from "../middleware/login.js"
 
 const router = Router()
 
 
 
-router.get("/cart", async(req, res) => {
+router.get("/cart", login, async(req, res) => {
     try {
         
         const token = req.cookies[process.env.COOKIE_NAME]
@@ -23,7 +23,7 @@ router.get("/cart", async(req, res) => {
         res.status(500).json("Something went wrong")
     }
 })
-router.post("/cart", async(req, res) => {
+router.post("/cart", login, async(req, res) => {
     try {
         const {productId, quantity, productImg} = req.body
         const token = req.cookies[process.env.COOKIE_NAME]
@@ -53,7 +53,7 @@ router.post("/cart", async(req, res) => {
     }
 })
 
-router.delete("/cart", (req, res) => {
+router.delete("/cart", login, (req, res) => {
     try {
         const {productId} = req.body
         if(!productId) {
@@ -78,7 +78,7 @@ router.delete("/cart", (req, res) => {
     }
 })
 
-router.put("/cart", (req, res) => {
+router.put("/cart", login, (req, res) => {
     try {
         const {products} = req.body
         if(!productId) {

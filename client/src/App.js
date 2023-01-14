@@ -1,7 +1,7 @@
 import {Button, Flex, Spinner, useColorMode } from '@chakra-ui/react'
 import Home from "./pages/home"
 import Navbar from './Components/Navbar';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Signin from './Components/Signin';
 import NotFound from './pages/404';
 import Signup from './Components/Signup';
@@ -12,17 +12,17 @@ import VerifyEmail from './Components/Verify';
 import { useDispatch, useSelector } from 'react-redux';
 import ChangePasswordForm from './Components/Changepassword';
 import CheckLink from './Components/CheckLink';
-import { Suspense, useEffect } from 'react';
+import {  useEffect } from 'react';
 import { CheckLogin } from './redux/actions/auth';
-import axios from 'axios';
 import SingleProduct from './pages/ProductPage';
 import Account from './pages/account';
 import Checkout from './pages/checkout';
+import CheckPayment from './pages/checkPayment';
 
 function App() {
   const { colorMode, toggleColorMode } = useColorMode();
   const {loading, loggedIn} = useSelector(state => state.auth)
-  const productsLoading = useSelector(state => state.products.loading)
+  const {loadingProducts} = useSelector(state => state.products.loading)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(CheckLogin())
@@ -31,12 +31,15 @@ function App() {
 
   
   
-  return (
+  return (  
     
     <Flex minHeight="100vh" alignItems="center" flexDirection="column" w="100vw" maxW="100%" >
       {
-        loading ? (
-          <Spinner size="xl" color="red.400" />
+        loading || loadingProducts ? (
+          <Flex minHeight="100vh" alignItems="center">
+            <Spinner size="xl" color="red.400" />
+          </Flex>
+          
         ) : (
           <Flex flexDirection="column" w="100%">
             <Button zIndex="999" color="white" bg="red.400" width="50px" height="50px" borderRadius="50%" position="fixed" bottom="1rem" right="1rem" onClick={toggleColorMode} _hover={{
@@ -47,17 +50,17 @@ function App() {
             <Navbar /> 
             <Routes>
               <Route path="/" element={<Home />} /> 
-              {loggedIn ? <Route path="/checkout" element={<Checkout />} /> : null}
-              {loggedIn ? null :<Route path="/signin" element={<Signin />} />}
-              {loggedIn ? null :<Route path="/signup" element={<Signup />} />}
-              {loggedIn ? <Route path="/account" element={<Account />} /> : null}
-              {loggedIn ? null :<Route path="/forgot" element={<ForgotPasswordForm />} />}
-              {loggedIn ? null :<Route path="/verify/:email" element={<VerifyEmail/>} />}
-              {loggedIn ? null :<Route path="/recover/:email/:code" element={<CheckLink />} />}
-              {loggedIn ? null :<Route path="/changepassword/:email/:code" element={<ChangePasswordForm />} />} 
+              {loggedIn ? <Route path="/checkout" element={<Checkout />} /> : <Route path="/checkout" element={<Navigate to="/signin" />} />}
+              loggedIn ? <Route path="/checkPayment" element={<CheckPayment />} /> 
+              {loggedIn ? <Route path="/signin" element={<Navigate to="/" />} /> :<Route path="/signin" element={<Signin />} />}
+              {loggedIn ? <Route path="/signup" element={<Navigate to="/" />} /> :<Route path="/signup" element={<Signup />} />}
+              {loggedIn ? <Route path="/account" element={<Account />} /> : <Route path="/account" element={<Navigate to="/" />} />}
+              {loggedIn ? <Route path="/forgot" element={<Navigate to="/" />} /> :<Route path="/forgot" element={<ForgotPasswordForm />} />}
+              {loggedIn ? <Route path="/verify/:email" element={<Navigate to="/" />} /> :<Route path="/verify/:email" element={<VerifyEmail/>} />}
+              {loggedIn ? <Route path="/recover/:email/:code" element={<Navigate to="/" />} /> :<Route path="/recover/:email/:code" element={<CheckLink />} />}
+              {loggedIn ? <Route path="/changepassword/:email/:code" element={<Navigate to="/" />} /> :<Route path="/changepassword/:email/:code" element={<ChangePasswordForm />} />} 
               <Route path="/products/:category" element={<Products />} />
               <Route path="/singleproduct/:id" element={<SingleProduct />} />
-              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Flex>

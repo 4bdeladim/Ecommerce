@@ -9,6 +9,8 @@ import categories from "./routes/category.js"
 import rateLimit from 'express-rate-limit'
 import cart from "./routes/cart.js"
 import order from "./routes/order.js"
+import checkout from "./routes/checkout.js"
+
 
 dotenv.config();
 const app = express();  
@@ -29,6 +31,7 @@ app.use("/api/products/", categories)
 app.use("/api/",auth)
 app.use("/api/", cart)
 app.use("/api/", order)
+app.use("/api/", checkout)
 
 mongoose.set('strictQuery', false)
 mongoose.connect(DATABASE_URL, () => {

@@ -1,6 +1,6 @@
 import { createSlice, isFulfilled, isRejected, isPending} from '@reduxjs/toolkit'
 import Swal from 'sweetalert2'
-import { AddNewProduct, AddToCart, CancelOrder, DeleteFromCart, GetCart, GetCategories, GetOrders, GetPopularProducts, GetProduct, GetProducts, NewOrder, UpdateCart } from './actions/products'
+import { AddNewProduct, AddToCart, CancelOrder, Checkout, DeleteFromCart, GetCart, GetCategories, GetOrders, GetPopularProducts, GetProduct, GetProducts, NewOrder, UpdateCart } from './actions/products'
 
 
 
@@ -112,6 +112,7 @@ export const productsSlice = createSlice({
     [NewOrder.fulfilled]: (state, action) => {
       state.loading = false
       state.orders = action.payload
+      window.location.replace("/account")
     },
     [NewOrder.rejected]: (state, action) => {
       state.loading = false
@@ -127,6 +128,16 @@ export const productsSlice = createSlice({
       state.loading = false
     },
     [CancelOrder.pending]: (state, action) => {
+      state.loading = true
+    },
+    [Checkout.fulfilled]: (state, action) => {
+      state.loading = false
+      window.location.replace(action.payload.url)
+    },
+    [Checkout.rejected]: (state, action) => {
+      state.loading = false
+    },
+    [Checkout.pending]: (state, action) => {
       state.loading = true
     }
   }

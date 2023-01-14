@@ -17,6 +17,10 @@ const UserSchema = new Schema({
         required: true,
         min: 8
     },
+    sessionId: {
+        type:String,
+        default: null
+    },
     orders: {
         type: Array,
         default: []
