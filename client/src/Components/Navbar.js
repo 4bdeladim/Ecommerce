@@ -18,7 +18,7 @@ import {
   Avatar,
 } from '@chakra-ui/react';
 import {Link} from "react-router-dom"
-import {CiShoppingCart} from "react-icons/ci"
+import {FaOpencart} from "react-icons/fa"
 import {
   HamburgerIcon,
   CloseIcon,
@@ -198,7 +198,7 @@ export default function Navbar() {
             ) : (null)
           }
           
-          <CiShoppingCart 
+          <FaOpencart 
             fontSize="2.5rem"
             style={{marginTop:".2rem", padding:".5rem"}}
             cursor="pointer"

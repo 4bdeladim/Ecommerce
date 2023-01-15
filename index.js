@@ -10,6 +10,8 @@ import rateLimit from 'express-rate-limit'
 import cart from "./routes/cart.js"
 import order from "./routes/order.js"
 import checkout from "./routes/checkout.js"
+import cors from "cors"
+import path from "path"
 
 
 dotenv.config();
@@ -22,7 +24,9 @@ const limiter = rateLimit({
 	standardHeaders: true, 
 	legacyHeaders: false, 
 })
+app.use(express.static(path.resolve(process.cwd(), "client", "build")));
 app.use(limiter)
+app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -32,7 +36,17 @@ app.use("/api/",auth)
 app.use("/api/", cart)
 app.use("/api/", order)
 app.use("/api/", checkout)
-
+app.get("*", (_, res) => {
+	res.sendFile(
+		path.join(process.cwd(), "./client/build/index.html"),
+		(err) => {
+			if(err) {
+				console.log(err)
+				res.status(500).send(err)
+			}
+		}
+	)
+})
 mongoose.set('strictQuery', false)
 mongoose.connect(DATABASE_URL, () => {
     console.log("Mogoose connected")
