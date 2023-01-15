@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link} from "react-router-dom"
 import { AddToCart } from '../redux/actions/products';
+import { AddToCartNotLoggedIn } from '../redux/products';
 
   
 function Product({product}) {
@@ -12,9 +13,7 @@ function Product({product}) {
     const {loggedIn} = useSelector(state => state.auth)
     const addToCart = () => {
       if(!loggedIn){
-        let cart = Array.isArray(JSON.parse(localStorage.getItem("cart"))) ? JSON.parse(localStorage.getItem("cart")) : []
-        cart.push({productId: product._id, productImg: product.img, quantity: 1})
-        localStorage.setItem("cart", JSON.stringify(cart))
+        dispatch(AddToCartNotLoggedIn({productId: product._id, productImg: product.img, quantity: 1}))
         return;
       }
       dispatch(AddToCart({productId: product._id, productImg: product.img, quantity: 1}))

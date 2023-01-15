@@ -31,7 +31,8 @@ export default function Cart({opened}) {
     useEffect(() => {
       dispatch(GetCart())
     }, [])
-    const {cart, cartLoading} = useSelector(state => state.products) || JSON.parse(localStorage.getItem("cart")) || []
+    const {cart} = useSelector(state => state.products)
+    const {localCart} = useSelector(state => state.products)
     const {loggedIn} = useSelector(state => state.auth)
     const { isOpen, onOpen, onClose } = useDisclosure()
   
@@ -50,7 +51,8 @@ export default function Cart({opened}) {
   
             <DrawerBody w="100%" >
               {
-                cart?.map(e => <CartCard key={e.productId} data={e} />)
+                loggedIn ? cart?.map(e => <CartCard key={e.productId} data={e} />) : localCart.map(e => <CartCard key={e.productId} data={e} />)
+                
               }
             </DrawerBody>
   

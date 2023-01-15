@@ -81,8 +81,10 @@ export default function Navbar() {
             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
             fontFamily={'heading'}
             to="/"
-            color={useColorModeValue('gray.800', 'white')}>
-            Logo
+            fontWeight="900"
+            color="red.400"
+            >
+            USHOP
           </Text>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
@@ -254,7 +256,7 @@ export default function Navbar() {
                         align={'start'}>
                         {categories.map((cat) => (
                             <Link key={cat._id} py={2} to={"/products/"+cat.name}>
-                              {cat.name}
+                              {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
                             </Link>
                           ))}
 
@@ -266,7 +268,9 @@ export default function Navbar() {
                 )
               }
               
-              <Button
+              {
+                !loggedIn ? (
+                  <Button
       
                     w="100px"
                     as={Link}
@@ -283,7 +287,9 @@ export default function Navbar() {
                     }}
                     >
                     Sign In
-                </Button>
+              </Button>
+                ) : (location.pathname.split("/")[1] === "products" ? <Link to="/">Home </Link> : "")
+              }
 
               
             </Flex>

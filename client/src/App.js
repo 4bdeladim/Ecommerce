@@ -18,6 +18,7 @@ import SingleProduct from './pages/ProductPage';
 import Account from './pages/account';
 import Checkout from './pages/checkout';
 import CheckPayment from './pages/checkPayment';
+import { SetLocalCart } from './redux/products';
 
 function App() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -26,6 +27,7 @@ function App() {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(CheckLogin())
+    dispatch(SetLocalCart())
     return () => {}
   }, [])
 

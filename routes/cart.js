@@ -80,8 +80,8 @@ router.delete("/cart", login, (req, res) => {
 
 router.put("/cart", login, (req, res) => {
     try {
-        const {products} = req.body
-        if(!productId) {
+        const {productId, quantity} = req.body
+        if(!productId || !quantity) {
             res.status(404).json("Invalid id")
             return;
         }
@@ -94,9 +94,8 @@ router.put("/cart", login, (req, res) => {
         User.findById(decoded.id, async(err, user) => {
             if(!user) res.status(404).json("User not found")
             user.cart = user.cart.map(e => {
-                let newItem = products.find(newEL => newEL.productId === e.productId)
-                if(newItem) {
-                    return {...e, quantity: newItem.quantity}
+                if(e.productId === productId) {
+                    return {...e, quantity: quantity}
                 }
                 return e 
             })
