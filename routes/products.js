@@ -1,8 +1,7 @@
 import {Router} from "express"
 import admin from "../middleware/admin.js";
-import loggedIn from "../middleware/login.js"
 import Product from "../models/product.js";
-import User from "../models/user.js";
+
 
 
 
@@ -49,42 +48,7 @@ router.get("/products/popular", async(req, res) => {
 })
 
 
-router.post("/products", async(req, res) => {
-    try {
-        const {name, description, price, category, image} = req.body
-        const newProduct = new Product({name, description, price, category, img:image})
-        await newProduct.save()
-        res.status(200).json("item added")
-    } catch (error) {
-        res.status(500).json("Something went wrong")
-    }
-})
 
-router.delete("/products", async(req, res) => {
-    try {
-        const {id} = req.body
-        Product.deleteOne({id})
-            .then(res => {
-                res.status(200).json("Product deleted")
-            }).catch(err => {
-                res.status(404).json(err)
-            })
-    } catch (error) {
-        res.status(500).json("Something went wrong")
-    }
-})
 
-router.put("/products", (req, res) => {
-    try {
-        const {id, name, descreption, price, category} = req.body
-        Product.updateOne({id}, {name, descreption, price, category}, (err, res) => {
-            if(err){
-                res.status(404).json(err)
-            }
-            res.status(200).json("Product updated")
-        })
-    } catch (error) {
-        res.status(500).json("Something went wrong")
-    }
-})
+
 export default router

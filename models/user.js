@@ -17,6 +17,11 @@ const UserSchema = new Schema({
         required: true,
         min: 8
     },
+    role: {
+        type:String,
+        default:"user",
+        enum: ["owner","admin","user"]
+    },
     sessionId: {
         type:String,
         default: null
@@ -40,6 +45,10 @@ const UserSchema = new Schema({
     },
     recoveryCode: {
         type: String,
+        default: null
+    },
+    SBadress: {
+        type:String, 
         default: null
     }
 })

@@ -28,6 +28,10 @@ const ProductSchema = new Schema({
     },
     img: {
         type:String
+    },
+    amountInInventory: {
+        type:Number,
+        required: true
     }
 })
 

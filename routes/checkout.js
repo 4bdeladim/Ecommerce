@@ -12,7 +12,6 @@ const router = Router()
 
 
 router.post("/checkout", login, async(req, res) => {
-    console.log("Check out")
     try {
         const token = req.cookies[process.env.COOKIE_NAME] 
         if(!token) {
