@@ -15,8 +15,11 @@ router.get("/signin", (req, res) => {
         else { 
             const decoded = jwt.verify(token, process.env.JWT_KEY)
             User.findById(decoded.id, (err, user) => {
-                if(!user) res.status(500)
-                res.status(200).json(user.username)
+                if(!user) {
+                    res.status(500).json("No user found")
+                    return;
+                }
+                res.status(200).json({username:user.username, role: user.role})
             })
         }
     } catch(error) {
@@ -31,6 +34,9 @@ router.post("/signup", async (req, res) => {
         if(!email || !username || !password) {
             res.status(501).json("Missing field!")
             return;
+        }
+        if(username.length < 4 || password.length < 8) {
+            res.status(403).json("Username must be atleast 4 charaters and password atleast 8")
         }
         User.findOne({username}, async (err, user) => {
             if(user) {
@@ -130,7 +136,7 @@ router.post("/signin", (req, res) => {
                             {id: user.id},
                             process.env.JWT_KEY,
                             (err, token) => {
-                                res.cookie(process.env.COOKIE_NAME, token, {httpOnly: true, maxAge: (60 * 100 * 60 * 60 )}).json(user.username);
+                                res.cookie(process.env.COOKIE_NAME, token, {httpOnly: true, maxAge: (60 * 100 * 60 * 60 )}).json({username:user.username, role: user.role});
                             }
                         )
                     })

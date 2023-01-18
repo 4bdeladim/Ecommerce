@@ -50,18 +50,6 @@ export const GetCategories = createAsyncThunk(
         }
     }
 )
-export const AddNewProduct = createAsyncThunk(
-    "products/add",
-    async (info) => {
-        try {
-            const {name, descreption, price, category, image} = info 
-            const response = await api.APIaddNewProduct(name, descreption, price, category)
-            return response
-        } catch (error) {
-            throw error.response.data || "Something went wrong"
-        }
-    }
-)
 
 export const GetCart = createAsyncThunk(
     "products/getcart",

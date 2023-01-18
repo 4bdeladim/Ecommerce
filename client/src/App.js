@@ -12,17 +12,17 @@ import VerifyEmail from './Components/Verify';
 import { useDispatch, useSelector } from 'react-redux';
 import ChangePasswordForm from './Components/Changepassword';
 import CheckLink from './Components/CheckLink';
-import {  useEffect } from 'react';
+import {  lazy, Suspense, useEffect } from 'react';
 import { CheckLogin } from './redux/actions/auth';
 import SingleProduct from './pages/ProductPage';
 import Account from './pages/account';
 import Checkout from './pages/checkout';
 import CheckPayment from './pages/checkPayment';
 import { SetLocalCart } from './redux/products';
-
+import Admin from './pages/admin';
 function App() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const {loading, loggedIn} = useSelector(state => state.auth)
+  const {loading, loggedIn, role} = useSelector(state => state.auth)
   const {loadingProducts} = useSelector(state => state.products.loading)
   const dispatch = useDispatch()
   useEffect(() => {
@@ -41,7 +41,6 @@ function App() {
           <Flex minHeight="100vh" alignItems="center">
             <Spinner size="xl" color="red.400" />
           </Flex>
-          
         ) : (
           <Flex flexDirection="column" w="100%">
             <Button zIndex="999" color="white" bg="red.400" width="50px" height="50px" borderRadius="50%" position="fixed" bottom="1rem" right="1rem" onClick={toggleColorMode} _hover={{
@@ -64,6 +63,8 @@ function App() {
               <Route path="/products/:category" element={<Products />} />
               <Route path="/singleproduct/:id" element={<SingleProduct />} />
               <Route path="*" element={<NotFound />} />
+              {role === "owner" || role === "admin" ? <Route path='/admin' element={<Admin />} /> : null}
+    
             </Routes>
           </Flex>
         )

@@ -1,16 +1,17 @@
-import { ViewIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
 import { Card,Button,ButtonGroup,Divider, Stack, Image, Heading, Text,  CardBody, CardFooter, useDisclosure } from '@chakra-ui/react'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link} from "react-router-dom"
 import { AddToCart } from '../redux/actions/products';
 import { AddToCartNotLoggedIn } from '../redux/products';
+import AlertDialogCheck from './DeleteWithAlert';
 
   
 function Product({product}) {
     const [hovered, sethovered] = useState(false)
     const dispatch = useDispatch()
-    const {loggedIn} = useSelector(state => state.auth)
+    const {loggedIn, role} = useSelector(state => state.auth)
     const addToCart = () => {
       if(!loggedIn){
         dispatch(AddToCartNotLoggedIn({productId: product._id, productImg: product.img, quantity: 1}))
@@ -25,6 +26,20 @@ function Product({product}) {
             <ViewIcon color="white" />
           </Stack>
         ) : ""}
+        {
+          role === "owner" || role === "admin" ? (
+            <Stack cursor="pointer" _hover={{bg: "pink.300"}} position="absolute" borderBottomRadius="50%" borderTopRadius="50%" top="1rem" left="1rem" bg="red.400" padding=".5rem .5rem">
+              <EditIcon color="white" />
+            </Stack>
+          ) : null
+        }
+        {
+          role === "owner" || role === "admin" ? (
+            <Stack cursor="pointer" _hover={{bg: "pink.300"}} position="absolute" borderBottomRadius="50%" borderTopRadius="50%" top="1rem" left="4rem" bg="red.400" padding=".5rem .5rem">
+              <AlertDialogCheck id={product._id} />
+            </Stack>
+          ) : null
+        }
 
         
         <CardBody maxH="620px" d="flex">
@@ -60,4 +75,6 @@ function Product({product}) {
     );
   }
   
+
+
 export default Product;

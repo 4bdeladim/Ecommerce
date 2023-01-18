@@ -42,12 +42,13 @@ router.post("/orders", async(req, res) => {
         if (session.payment_status === "paid") {
             user.cart.map(async(e) => {
                 const product = await Product.findById(e.productId)
-                product.sales = product.sales + e.quantity
+                product.sales = product.sales + e.quantity  
                 await product.save()
                 const newOder = new Order({productID:product.id, quantity:e.quantity, productPrice: product.price, totalPrice: product.price * e.quantity, userID: decoded.id, status: "Pending" })
                 await newOder.save();
             })
             user.cart = []
+            user.orders = user.orders + 1
             user.sessionId = null
             await user.save()
             res.status(200).json({ status: "success" });

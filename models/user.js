@@ -3,9 +3,9 @@ import {model, Schema} from "mongoose"
 const UserSchema = new Schema({
     username: {
         type:String,
+        minLength: 4,
         required: true,
         unique: true,
-        min: 4
     },
     email: {
         type:String,
@@ -14,8 +14,8 @@ const UserSchema = new Schema({
     },
     password: {
         type:String,
+        minLength: 8,
         required: true,
-        min: 8
     },
     role: {
         type:String,
@@ -30,7 +30,6 @@ const UserSchema = new Schema({
         type: Array,
         default: []
     },
-
     cart: {
         type:Array,
         default: []
@@ -50,6 +49,10 @@ const UserSchema = new Schema({
     SBadress: {
         type:String, 
         default: null
+    },
+    date: {
+        type:Date,
+        default: new Date()
     }
 })
 

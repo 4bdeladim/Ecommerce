@@ -33,7 +33,7 @@ router.get("/singleproduct/:id", async (req, res) => {
     try {
         const {id} = req.params 
         const product = await Product.findById(id)
-        res.status(200).json(product)
+        res.status(200).json({name: product.name, description: product.description, price: product.price, category: product.category, img: product.img})
     } catch (error) {
         res.status(500).json("Something went wrong")
     }
@@ -41,7 +41,8 @@ router.get("/singleproduct/:id", async (req, res) => {
 router.get("/products/popular", async(req, res) => {
     try {
         const products = await Product.find({}).sort({sales: "desc"})
-        res.status(200).json(products.slice(0, 16))
+        const newProducts = products.map(product => {return {name: product.name, description: product.description, price: product.price, category: product.category, img: product.img}})
+        res.status(200).json(newProducts.slice(0, 16))
     } catch (error) {
         res.status(500).json("Something went wrong")
     }

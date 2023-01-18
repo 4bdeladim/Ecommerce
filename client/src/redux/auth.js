@@ -6,7 +6,8 @@ import {signIn,verify,signUp, sendRecoveryLink, checkRecoveryLink, changePasswor
 const initialState = {
   loggedIn: false,
   username: null,
-  loading: false
+  loading: false,
+  role: "user"
 }
 
 export const authSlice = createSlice({
@@ -20,7 +21,8 @@ export const authSlice = createSlice({
         builder
         .addCase(CheckLogin.fulfilled, (state, action) => {
             state.loading = false
-            state.username = action.payload
+            state.username = action.payload.username
+            state.role = action.payload.role
             state.loggedIn = true
             state.cart = action.payload.cart
         })
@@ -34,9 +36,9 @@ export const authSlice = createSlice({
         })
         .addCase(signIn.fulfilled, (state, action) => {
             state.loading = false
-            state.username = action.payload
+            state.username = action.payload.username
             state.loggedIn = true
-            window.location.replace("/")
+            state.role = action.payload.role
         })
         .addCase(signIn.pending, (state, action) => {
             state.loading = true

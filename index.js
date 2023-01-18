@@ -12,7 +12,8 @@ import order from "./routes/order.js"
 import checkout from "./routes/checkout.js"
 import cors from "cors"
 import path from "path"
-
+import adminUsers from "./routes/admin/users.js"
+import adminProducts from "./routes/admin/products.js"
 
 dotenv.config();
 const app = express();  
@@ -36,6 +37,10 @@ app.use("/api/",auth)
 app.use("/api/", cart)
 app.use("/api/", order)
 app.use("/api/", checkout)
+app.use("/api/admin/", adminUsers)
+app.use("/api/admin", adminProducts)
+
+
 app.get("*", (_, res) => {
 	res.sendFile(
 		path.join(process.cwd(), "./client/build/index.html"),
