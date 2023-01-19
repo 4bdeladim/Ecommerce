@@ -29,7 +29,9 @@ app.use(express.static(path.resolve(process.cwd(), "client", "build")));
 app.use(limiter)
 app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+    limit: '50mb'
+}));
 app.use(cookieParser());
 app.use("/api/", products)
 app.use("/api/products/", categories)
@@ -46,7 +48,6 @@ app.get("*", (_, res) => {
 		path.join(process.cwd(), "./client/build/index.html"),
 		(err) => {
 			if(err) {
-				console.log(err)
 				res.status(500).send(err)
 			}
 		}

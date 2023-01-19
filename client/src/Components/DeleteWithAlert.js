@@ -14,13 +14,13 @@ import { useDispatch } from 'react-redux'
 import { DeleteProduct } from '../redux/actions/admin'
 
 
-export default function AlertDialogCheck({id}) {
+export default function AlertDialogCheck({id, data}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const dispatch = useDispatch()
     const cancelRef = useRef()
     const confirm = () => {
         onClose()
-        dispatch(DeleteProduct(id))
+        dispatch(DeleteProduct({id, data}))
     }
 
     return (

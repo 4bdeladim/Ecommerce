@@ -41,7 +41,6 @@ export const productsSlice = createSlice({
     },
     UpdateFromCartNotLoggedIn(state, action) {
       const {productId, quantity} = action.payload
-      console.log(quantity)
       const productsStored = localStorage.getItem("cart")
       const newProductsStored = JSON.parse(productsStored).map(e => {
         if(e.productId === productId) return {

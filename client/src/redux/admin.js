@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import Swal from "sweetalert2"
-import { DeleteProduct, GetUsers } from "./actions/admin"
+import { AddNewProduct, DeleteProduct, GetUsers } from "./actions/admin"
 
 const initialState = {
     users: [],
@@ -39,6 +39,18 @@ export const adminSlice = createSlice({
                 Swal.fire({
                     title:action.error,
                     icon: "error"
+                })
+            })
+            .addCase(AddNewProduct.fulfilled, (state, action) => {
+                Swal.fire({
+                    title:action.payload,
+                    icon:"success"
+                })
+            })
+            .addCase(AddNewProduct.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
                 })
             })
     }

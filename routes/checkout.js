@@ -46,7 +46,6 @@ router.post("/checkout", login, async(req, res) => {
         await user.save()
         res.status(200).json({url: session.url})
     } catch (error) {
-        console.log(error)
         res.status(500).json("Something went wrong")
     }
 })

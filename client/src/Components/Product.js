@@ -8,7 +8,7 @@ import { AddToCartNotLoggedIn } from '../redux/products';
 import AlertDialogCheck from './DeleteWithAlert';
 
   
-function Product({product}) {
+function Product({product, data}) {
     const [hovered, sethovered] = useState(false)
     const dispatch = useDispatch()
     const {loggedIn, role} = useSelector(state => state.auth)
@@ -36,7 +36,7 @@ function Product({product}) {
         {
           role === "owner" || role === "admin" ? (
             <Stack cursor="pointer" _hover={{bg: "pink.300"}} position="absolute" borderBottomRadius="50%" borderTopRadius="50%" top="1rem" left="4rem" bg="red.400" padding=".5rem .5rem">
-              <AlertDialogCheck id={product._id} />
+              <AlertDialogCheck data={data} id={product._id} />
             </Stack>
           ) : null
         }

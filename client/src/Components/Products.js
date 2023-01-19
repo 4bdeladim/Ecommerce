@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { GetCategories, GetProducts } from '../redux/actions/products'
+import AddProductDialog from './AddProductDialog'
 import Product from './Product'
 
 const Products = () => {
   const {category} = useParams()
-  const {pages, categories} = useSelector(state => state.products)
+  const {pages, categories, products} = useSelector(state => state.products)
   const [categorySelected, setcategorySelected] = useState(category)
-  const {products} = useSelector(state => state.products)
+  const {role} = useSelector(state => state.auth)
   const [sort, setsort] = useState("A-Z")
   const [selected, setSelected] = useState(1)
   const [priceRange, setPriceRange] = useState([0, 2000])
@@ -35,6 +36,9 @@ const Products = () => {
   
   return (
     <Flex w="100%"  px={issmallerthan870 ? "1rem" : "4rem"} flexDirection="column" alignItems="center" columnGap="2rem">
+      {
+        role === "admin" || role === "owner" ? <AddProductDialog data={{page: selected, sort, category:categorySelected, min: priceRange[0], max: priceRange[1]}} /> : null
+      }
       <Flex flexWrap="wrap" gap="1rem" w="100%" my="2rem" justifyContent="space-around" alignItems="center">
         <Flex  flexDirection="column" justifyContent="flex-start">
           <Text>Category:</Text>
@@ -83,7 +87,7 @@ const Products = () => {
       <Flex w="100%" gap="1rem" flexWrap="wrap" justifyContent="center">
         { 
                 products.map((el) => (
-                    <Product key={el._id} product={el}  />
+                    <Product key={el._id} data={{page: selected, sort, category:categorySelected, min: priceRange[0], max: priceRange[1]}} product={el}  />
                 ))
             }
       </Flex>

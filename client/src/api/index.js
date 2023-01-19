@@ -21,3 +21,4 @@ export const APIcancelOrder = (orderId) => axios.delete("/api/orders", {orderId}
 export const APIcheckout = () => axios.post("/api/checkout")
 export const APIgetUsers = () => axios.get("/api/admin/users")
 export const APIdeleteProduct = (id) => axios.post("/api/admin/deleteproduct", {id: id})
+export const APIaddNewProduct = (name, description, price, category, image, amountInInventory) => axios.post("/api/admin/products", {name, description, price, category, image, amountInInventory})

@@ -51,10 +51,10 @@ router.put("/categories", admin, (req, res) => {
 
 router.post("/products", admin, async(req, res) => {
     try {
-        const {name, description, price, category, image} = req.body
-        const newProduct = new Product({name, description, price, category, img:image})
+        const {name, description, price, category, amountInInventory, image} = req.body
+        const newProduct = new Product({name, description, price, category, amountInInventory, img:image})
         await newProduct.save()
-        res.status(200).json("item added")
+        res.status(200).json("Item added")
     } catch (error) {
         res.status(500).json("Something went wrong")
     }

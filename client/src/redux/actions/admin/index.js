@@ -17,15 +17,28 @@ export const GetUsers = createAsyncThunk(
 
 export const DeleteProduct = createAsyncThunk(
     "admin/deleteProducts", 
-    async (id) => {
+    async (info, {dispatch}) => {
         try {
-            console.log(id)
+            const {id} = info
             const { data } = await api.APIdeleteProduct(id)
-            // dispatch(GetProducts())
+            dispatch(GetProducts(info.data))
             return data
         } catch (error) {
-            console.log(error.response.data)
             throw error.response.data || "Something went wrong"
         }
     }
 ) 
+
+export const AddNewProduct = createAsyncThunk(
+    "admin/addProduct",
+    async (info, {dispatch}) => {
+        try {
+            const {name, description, price, category, image, amountInInventory} = info
+            const { data } = await api.APIaddNewProduct(name, description, price, category, image, amountInInventory)
+            dispatch(GetProducts(info.data))
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
