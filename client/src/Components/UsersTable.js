@@ -7,10 +7,15 @@ import {
     Th,
     Td,
     TableContainer,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    Menu,
+    Button,
   } from '@chakra-ui/react'
-import { EditIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { GetUsers } from '../redux/actions/admin'
+import { DeleteUser, GetUsers } from '../redux/actions/admin'
 
 const UsersTable = () => {
     const dispatch = useDispatch()
@@ -18,6 +23,9 @@ const UsersTable = () => {
         dispatch(GetUsers())
     }, [])
     const { users } = useSelector(state => state.admin)
+    const delete_user = (id) => {
+        dispatch(DeleteUser(id))
+    }
     return (
         <TableContainer rounded="lg" border="1px solid #f0f0f0" mr="2rem">
             <Table >
@@ -42,7 +50,21 @@ const UsersTable = () => {
                                 <Td>{e.orders.length}</Td>
                                 <Td>{e.date}</Td>
                                 <Td>{e.SBadress}</Td>
-                                <Td><EditIcon /></Td>
+                                <Td>
+                                    <Menu>
+                                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                                           Actions
+                                        </MenuButton>
+                                        <MenuList>
+                                            <MenuItem>Make Admin</MenuItem>
+                                            <MenuItem onClick={() => delete_user(e._id)}>Delete User</MenuItem>
+                                            <MenuItem>Edit Info</MenuItem>
+                                            <MenuItem>Send Email</MenuItem>
+                                            <MenuItem>Ban</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                
+                                </Td>
                             </Tr>
                         ))
                     }

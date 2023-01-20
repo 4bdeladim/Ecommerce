@@ -42,3 +42,17 @@ export const AddNewProduct = createAsyncThunk(
         }
     }
 )
+
+
+export const DeleteUser = createAsyncThunk(
+    "admin/deleteUser",
+    async (id, {dispatch}) => {
+        try {
+            const { data } = await api.APIDeleteUser(id)
+            dispatch(GetUsers())
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)

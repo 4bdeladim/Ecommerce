@@ -10,13 +10,8 @@ const router = Router()
 router.post("/deleteUser", owner, async(req ,res) => {
     try {
         const { id } = req.body
-        User.findByIdAndDelete(id, (err, res) => {
-            if(err){
-                res.status(500).json("Something went wrong")
-                return;
-            } 
-            res.status(200).json("User deleted")
-        })
+        await User.findByIdAndDelete(id)
+        res.status(200).json("User deleted")
     } catch (error) {
         res.status(500).json("Something went wrong")
     }
@@ -56,7 +51,7 @@ router.post("/updateUserInfo", admin, async(req, res) => {
     }
 })
 
-router.delete("/deleteUser", admin, async(req, res) => {
+router.post("/deleteUser", admin, async(req, res) => {
     try {
         const { id } = req.body 
         const token = req.cookies[process.env.COOKIE_NAME]
