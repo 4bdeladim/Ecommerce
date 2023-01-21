@@ -6,7 +6,7 @@ import {Link} from "react-router-dom"
 import { AddToCart } from '../redux/actions/products';
 import { AddToCartNotLoggedIn } from '../redux/products';
 import AlertDialogCheck from './DeleteWithAlert';
-
+import EditProduct from "./EditProduct"
   
 function Product({product, data}) {
     const [hovered, sethovered] = useState(false)
@@ -28,9 +28,7 @@ function Product({product, data}) {
         ) : ""}
         {
           role === "owner" || role === "admin" ? (
-            <Stack cursor="pointer" _hover={{bg: "pink.300"}} position="absolute" borderBottomRadius="50%" borderTopRadius="50%" top="1rem" left="1rem" bg="red.400" padding=".5rem .5rem">
-              <EditIcon color="white" />
-            </Stack>
+            <EditProduct data={data} id={product._id} />
           ) : null
         }
         {

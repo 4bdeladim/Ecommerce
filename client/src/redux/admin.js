@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
 import Swal from "sweetalert2"
-import { AddNewProduct, DeleteProduct, DeleteUser, GetUsers } from "./actions/admin"
+import { AddCategory, AddNewProduct, DeleteProduct, DeleteUser, GetProduct, GetUsers, UpdateProduct } from "./actions/admin"
 
 const initialState = {
     users: [],
-    products: [],
     orders: [],
+    product: {},
     selectedPage: "Users"
 }
 
@@ -65,6 +65,41 @@ export const adminSlice = createSlice({
                     icon:"error"
                 })
             })
+            .addCase(AddCategory.fulfilled, (state, action) => {
+                Swal.fire({
+                    title:action.payload,
+                    icon:"success"
+                })
+            })
+            .addCase(AddCategory.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            .addCase(GetProduct.pending, (state, action) => {
+                state.product = {}
+            })
+            .addCase(GetProduct.fulfilled, (state, action) => {
+                state.product = action.payload
+            })
+            .addCase(GetProduct.rejected, (state, action) => {
+                state.product = {}
+            })
+           
+            .addCase(UpdateProduct.fulfilled, (state, action) => {
+                Swal.fire({
+                    title: action.payload,
+                    icon: "success"
+                })
+            })
+            .addCase(UpdateProduct.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon: "error"
+                })
+            })
+            
             
     }
 })

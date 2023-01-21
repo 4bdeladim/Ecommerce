@@ -1,4 +1,4 @@
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
+import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import {
     AlertDialog,
     AlertDialogBody,
@@ -17,22 +17,31 @@ import {
     Stack,
     Image
 } from '@chakra-ui/react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AddNewProduct, DeleteProduct } from '../redux/actions/admin'
+import { AddNewProduct, UpdateProduct } from '../redux/actions/admin'
+import { GetProduct } from '../redux/actions/admin'
 
 
-export default function AddProductDialog({data}) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [file, setfile] = useState(null)
-    const [info, setInfo] = useState({category:"men"})
+export default function EditProduct({data, id}) {
     const dispatch = useDispatch()
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { product } = useSelector(state => state.admin)
+    const [file, setfile] = useState(null)
+    const [info, setInfo] = useState({})
+    useEffect(() => {
+      setfile(product.img)
+      setInfo(product)
+    }, [product])
+    
     const {categories} = useSelector(state => state.products)
     const cancelRef = useRef()
     const uploadImageRef = useRef()
+    
     const confirm = () => {
         onClose()
-        dispatch(AddNewProduct({...info, image:file, data}))
+        dispatch(UpdateProduct({...info,_id:id, image:file, filters:data}))
+        
     }
     const getBase64 = (file) => {
         const reader = new FileReader()
@@ -41,17 +50,15 @@ export default function AddProductDialog({data}) {
         }
         reader.readAsDataURL(file)
     }
-
+    const open = () => {
+        dispatch(GetProduct(id))
+        onOpen()
+    }
     return (
         <>
-        <Button
-            my="1rem"
-            onClick={onOpen}
-            colorScheme='red'
-            aria-label='Call Segun'
-            size='lg'
-            leftIcon={<AddIcon />}
-        >Add new Product</Button>
+        <Stack onClick={open} cursor="pointer" _hover={{bg: "pink.300"}} position="absolute" borderBottomRadius="50%" borderTopRadius="50%" top="1rem" left="1rem" bg="red.400" padding=".5rem .5rem">
+            <EditIcon color="white" />
+        </Stack>
         <AlertDialog
             
             isOpen={isOpen}
@@ -63,19 +70,19 @@ export default function AddProductDialog({data}) {
                 <AlertDialogBody py="1rem">
                 <FormControl my="1rem">
                     <FormLabel>Name:</FormLabel>
-                    <Input onChange={(e) => setInfo({...info, name:e.target.value})} type='text' />
+                    <Input defaultValue={product.name} onChange={(e) => setInfo({...info, name:e.target.value})} type='text' />
                 </FormControl>
                 <FormControl my="1rem">
                     <FormLabel>Description:</FormLabel>
-                    <Textarea  onChange={(e) => setInfo({...info, description:e.target.value})}></Textarea>
+                    <Textarea defaultValue={product.description}  onChange={(e) => setInfo({...info, description:e.target.value})}></Textarea>
                 </FormControl>
                 <FormControl my="1rem">
                     <FormLabel>Price:</FormLabel>
-                    <Input  onChange={(e) => setInfo({...info, price:e.target.value})} type='number' />
+                    <Input defaultValue={product.price}  onChange={(e) => setInfo({...info, price:e.target.value})} type='number' />
                 </FormControl>
                 <FormControl my="1rem">
                     <FormLabel>Category:</FormLabel>
-                    <Select  onChange={(e) => setInfo({...info, category:e.target.value})}>
+                    <Select defaultValue={product.category}  onChange={(e) => setInfo({...info, category:e.target.value})}>
                         {
                             categories.map(cat => <option key={cat._id} value={cat.name}>{cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}</option> )
                         }
@@ -83,15 +90,15 @@ export default function AddProductDialog({data}) {
                 </FormControl>
                 <FormControl my="1rem">
                     <FormLabel>Amount in inventory:</FormLabel>
-                    <Input  onChange={(e) => setInfo({...info, amountInInventory:e.target.value})} type='number' />
+                    <Input defaultValue={product.amountInInventory}  onChange={(e) => setInfo({...info, amountInInventory:e.target.value})} type='number' />
                 </FormControl>
                 <FormControl my="1rem">
                     <FormLabel>Image:</FormLabel>
                     {
-                        file ? (<><Image src={file} /><Button onClick={() => setfile(null)} colorScheme="purple">Remove</Button></> ) : (
+                        file ? (<><Image src={file} /><Button my="1rem" onClick={() => setfile(null)} colorScheme="purple">Remove</Button></> ) : (
                             <Button onClick={() => uploadImageRef.current.click()} leftIcon={<AddIcon />} colorScheme="red" cursor="pointer">
                                 Upload or drag image
-                                <Input onChange={(e) => getBase64(e.target.files[0])} ref={uploadImageRef} type="file" display="none" />
+                                <Input onChange={(e) => getBase64(e.target.files[0])} ref={uploadImageRef} type="file" accept='image/*' display="none" />
                             </Button>
                         )
                     }

@@ -14,8 +14,8 @@ router.get("/products", async(req, res) => {
     try {
         const { page, sort, category, min, max } = req.query
         const s = sort === "A-Z" ? {name: "asc"} : (sort === "Z-A" ? {name: "desc"} : (sort === "H-L" ? {price: "desc"}: (sort === "L-H" ? {price:"asc"} : (sort === "popular" ? {sales: "desc"} : {name: "desc"}))) )
-        const cat = ["men", "women", "electronics", "jewelery"].indexOf(category) !== -1 ? category : null
-        const products = await Product.find(cat ? {category: cat} : {}).where("price").gt(parseInt(min)).lt(parseInt(max)).sort(s)
+        
+        const products = await Product.find(category !== "all" ? {category: category} : {}).where("price").gt(parseInt(min)).lt(parseInt(max)).sort(s)
         if(products.length < 15){
             if(products.length === 0) {
                 res.status(200).json({products, pages:0})

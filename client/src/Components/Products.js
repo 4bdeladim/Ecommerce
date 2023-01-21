@@ -1,8 +1,9 @@
-import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
-import { Button, Flex, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Select, Stack, Text, useMediaQuery } from '@chakra-ui/react'
-import React, { useState, useEffect } from 'react'
+import { AddIcon, ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogOverlay, Button, Flex, FormControl, FormLabel, Input, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Select, Stack, Text, useDisclosure, useMediaQuery } from '@chakra-ui/react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { AddCategory } from '../redux/actions/admin'
 import { GetCategories, GetProducts } from '../redux/actions/products'
 import AddProductDialog from './AddProductDialog'
 import Product from './Product'
@@ -12,10 +13,13 @@ const Products = () => {
   const {pages, categories, products} = useSelector(state => state.products)
   const [categorySelected, setcategorySelected] = useState(category)
   const {role} = useSelector(state => state.auth)
+  const [categoryName, setCategoryName] = useState("")
   const [sort, setsort] = useState("A-Z")
   const [selected, setSelected] = useState(1)
   const [priceRange, setPriceRange] = useState([0, 2000])
   const [issmallerthan870] = useMediaQuery("(max-width:870px)")
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef()
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(GetProducts({page: selected, sort, category:categorySelected, min: priceRange[0], max: priceRange[1]})) 
@@ -33,9 +37,53 @@ const Products = () => {
     setSelected(e)
   }
   
+  const confirm = () => {
+    onClose()
+    dispatch(AddCategory(categoryName))
+  }
   
   return (
     <Flex w="100%"  px={issmallerthan870 ? "1rem" : "4rem"} flexDirection="column" alignItems="center" columnGap="2rem">
+      
+      {
+        role === "admin" || role === "owner" ? (
+          <>
+            <Button
+                my="1rem"
+                onClick={onOpen}
+                colorScheme='red'
+                aria-label='Call Segun'
+                size='lg'
+                leftIcon={<AddIcon />}
+              >Add new Category</Button>
+            <AlertDialog
+                
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+            >
+                <AlertDialogOverlay>
+                <AlertDialogContent>
+                    <AlertDialogBody py="1rem">
+                    <FormControl my="1rem">
+                        <FormLabel>Name:</FormLabel>
+                        <Input onChange={(e) => setCategoryName(e.target.value)} type='text' />
+                    </FormControl>
+                    </AlertDialogBody>
+                    <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button onClick={() => confirm()} colorScheme='red' ml={3}>
+                        Add
+                    </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
+        </>
+        ) : null
+      }
       {
         role === "admin" || role === "owner" ? <AddProductDialog data={{page: selected, sort, category:categorySelected, min: priceRange[0], max: priceRange[1]}} /> : null
       }
@@ -89,7 +137,8 @@ const Products = () => {
                 products.map((el) => (
                     <Product key={el._id} data={{page: selected, sort, category:categorySelected, min: priceRange[0], max: priceRange[1]}} product={el}  />
                 ))
-            }
+        }
+        
       </Flex>
       <Flex gap="1rem" my="2rem">
             {selected !== 1 ? (

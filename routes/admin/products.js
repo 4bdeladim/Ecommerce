@@ -70,19 +70,25 @@ router.post("/deleteproduct", admin, async(req, res) => {
     }
 })
 
-router.put("/products", admin, (req, res) => {
+router.put("/products/:id", admin, async(req, res) => {
     try {
-        const {id, name, descreption, price, category} = req.body
-        Product.updateOne({id}, {name, descreption, price, category}, (err, res) => {
-            if(err){
-                res.status(404).json(err)
-            }
-            res.status(200).json("Product updated")
-        })
+        const {id} = req.params
+        const { name, descreption, price, category} = req.body
+        await Product.findByIdAndUpdate(id, {name, descreption, price, category})
+        res.status(200).json("Product updated")
     } catch (error) {
         res.status(500).json("Something went wrong")
     }
 })
 
+router.get("/product/:id",admin, async(req, res) => {
+    try {
+        const {id} = req.params
+        const product = await Product.findById(id)
+        res.status(200).json(product)
+    } catch (error) {
+        res.status(500).json("Something went wrong")
+    }
+})
 
 export default router

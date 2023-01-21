@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import * as api from "../../../api";
-import { GetProducts } from "../products";
+import { GetCategories, GetProducts } from "../products";
 
 
 export const GetUsers = createAsyncThunk(
@@ -52,6 +52,47 @@ export const DeleteUser = createAsyncThunk(
             dispatch(GetUsers())
             return data
         } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const AddCategory = createAsyncThunk(
+    "admin/addCategory",
+    async (name, {dispatch}) => {
+        try {
+            const { data } = await api.APIaddNewCategory(name)
+            dispatch(GetCategories())
+            return data
+        } catch (error) {
+           
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const GetProduct = createAsyncThunk(
+    "admin/getProduct", 
+    async (id) => {
+        try {
+            const { data } = await api.APIadminGetProduct(id)
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const UpdateProduct = createAsyncThunk(
+    "admin/updateProduct",
+    async (info, {dispatch}) => {
+        try {
+            const { _id , name, description, price, category, image, amountInInventory, filters} = info
+            const { data } = await api.APIupdateProduct(_id, name, description, price, category, image, amountInInventory)
+            dispatch(GetProducts(filters))
+            return data
+        } catch (error) {
+            
             throw error.response.data || "Something went wrong"
         }
     }

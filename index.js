@@ -40,7 +40,7 @@ app.use("/api/", cart)
 app.use("/api/", order)
 app.use("/api/", checkout)
 app.use("/api/admin/", adminUsers)
-app.use("/api/admin", adminProducts)
+app.use("/api/admin/", adminProducts)
 
 
 app.get("*", (_, res) => {
