@@ -29,9 +29,11 @@ export default function EditProduct({data, id}) {
     const { product } = useSelector(state => state.admin)
     const [file, setfile] = useState(null)
     const [info, setInfo] = useState({})
+    const [selected, setSelected] = useState('')
     useEffect(() => {
       setfile(product.img)
       setInfo(product)
+      setSelected(product.category)
     }, [product])
     
     const {categories} = useSelector(state => state.products)
@@ -40,7 +42,7 @@ export default function EditProduct({data, id}) {
     
     const confirm = () => {
         onClose()
-        dispatch(UpdateProduct({...info,_id:id, image:file, filters:data}))
+        dispatch(UpdateProduct({...info,_id:id, image:file, category: selected, filters:data}))
         
     }
     const getBase64 = (file) => {
@@ -82,7 +84,7 @@ export default function EditProduct({data, id}) {
                 </FormControl>
                 <FormControl my="1rem">
                     <FormLabel>Category:</FormLabel>
-                    <Select defaultValue={product.category}  onChange={(e) => setInfo({...info, category:e.target.value})}>
+                    <Select value={selected} selected={product.category} onChange={(e) => setSelected(e.target.value)}>
                         {
                             categories.map(cat => <option key={cat._id} value={cat.name}>{cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}</option> )
                         }
@@ -111,7 +113,7 @@ export default function EditProduct({data, id}) {
                     Cancel
                 </Button>
                 <Button onClick={() => confirm()} colorScheme='red' ml={3}>
-                    Add
+                    Update
                 </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>

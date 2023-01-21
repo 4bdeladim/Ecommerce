@@ -22,6 +22,10 @@ const UserSchema = new Schema({
         default:"user",
         enum: ["owner","admin","user"]
     },
+    banned: {
+        type:Boolean,
+        default: false
+    },
     sessionId: {
         type:String,
         default: null
@@ -51,8 +55,7 @@ const UserSchema = new Schema({
         default: null
     },
     date: {
-        type:Date,
-        default: new Date()
+        type:Date
     }
 })
 

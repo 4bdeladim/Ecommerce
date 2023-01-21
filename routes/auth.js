@@ -58,7 +58,7 @@ router.post("/signup", async (req, res) => {
                         }
                         const RANDOM = Math.floor(100000 + Math.random() * 900000)
                         const hashedPassword = await bcrypt.hash(password, 10)
-                        const newUser = new User({email, username, password:hashedPassword, confirmationCode:RANDOM.toString()});
+                        const newUser = new User({email, username, password:hashedPassword, confirmationCode:RANDOM.toString(), date: new Date()});
                         const transporter = nodemailer.createTransport({
                             service: "gmail",
                             auth: {

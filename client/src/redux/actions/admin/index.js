@@ -1,3 +1,4 @@
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import * as api from "../../../api";
 import { GetCategories, GetProducts } from "../products";
@@ -93,6 +94,99 @@ export const UpdateProduct = createAsyncThunk(
             return data
         } catch (error) {
             
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const MakeUserAdmin = createAsyncThunk(
+    "admin/makeUserAdmin",
+    async (id, {dispatch}) => {
+        try {
+            const { data } = await api.APImakeUserAdmin(id)
+            dispatch(GetUsers())
+            return data
+        } catch (error) {
+            
+        }
+    }
+)
+
+export const MakeAdminUser = createAsyncThunk(
+    "admin/makeAdminUser",
+    async (id, {dispatch}) => {
+        try {
+            const { data } = await api.APImakeAdminUser(id)
+            dispatch(GetUsers())
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const Ban = createAsyncThunk(
+    "admin/ban",
+    async (id, {dispatch}) => {
+        try {
+            const { data } = await api.APIbanUser(id)
+            dispatch(GetUsers())
+            return data 
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+export const UnBan = createAsyncThunk(
+    "admin/unban",
+    async (id, {dispatch}) => {
+        try {
+            const { data } = await api.APIUnbanUser(id)
+            dispatch(GetUsers())
+            return data 
+        } catch (error) {
+            console.log(error)
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const EditUserInfo = createAsyncThunk(
+    "admin/editUser",
+    async (info, {dispatch}) => {
+        try {
+
+            const {id, username, SBadress, email} = info
+            const { data } = api.APIeditUserInfo(id, username, SBadress, email)
+            dispatch(GetUsers())
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const SendEmail = createAsyncThunk(
+    "admin/sendEmail",
+    async (info) => {
+        try {
+            const { id, messageTitle, message} = info
+            const { data } = await api.APIsendEmail(id, messageTitle, message)
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const GetUser = createAsyncThunk(
+    "admin/getUser",
+    async (id) => {
+        try {
+            const { data } = await api.APIgetUser(id)
+            
+            return data
+        } catch (error) {
             throw error.response.data || "Something went wrong"
         }
     }

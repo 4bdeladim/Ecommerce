@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit"
 import Swal from "sweetalert2"
-import { AddCategory, AddNewProduct, DeleteProduct, DeleteUser, GetProduct, GetUsers, UpdateProduct } from "./actions/admin"
+import { AddCategory, AddNewProduct, Ban, DeleteProduct, DeleteUser, EditUserInfo, GetProduct, GetUser, GetUsers, SendEmail, UnBan, UpdateProduct } from "./actions/admin"
 
 const initialState = {
     users: [],
+    user: {},
     orders: [],
     product: {},
     selectedPage: "Users"
@@ -99,6 +100,64 @@ export const adminSlice = createSlice({
                     icon: "error"
                 })
             })
+            .addCase(GetUser.fulfilled, (state, action) => {
+                state.user = action.payload
+            })
+            .addCase(GetUser.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon: "error"
+                })
+            })
+            .addCase(EditUserInfo.fulfilled, (state, action) => {
+                Swal.fire({
+                    title: action.payload,
+                    icon:"success"
+                })
+            })
+            .addCase(EditUserInfo.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            .addCase(Ban.fulfilled, (state, action) => {
+                Swal.fire({
+                    title: action.payload,
+                    icon:"success"
+                })
+            })
+            .addCase(Ban.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            .addCase(UnBan.fulfilled, (state, action) => {
+                Swal.fire({
+                    title: action.payload,
+                    icon:"success"
+                })
+            })
+            .addCase(UnBan.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            .addCase(SendEmail.fulfilled, (state, action) => {
+                Swal.fire({
+                    title: action.payload,
+                    icon:"success"
+                })
+            })
+            .addCase(SendEmail.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+
             
             
     }
