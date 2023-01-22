@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
+import { ViewIcon } from '@chakra-ui/icons';
 import { Card,Button,ButtonGroup,Divider, Stack, Image, Heading, Text,  CardBody, CardFooter, useDisclosure } from '@chakra-ui/react'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

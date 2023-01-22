@@ -33,3 +33,10 @@ export const APIbanUser = (id) => axios.delete(`/api/admin/ban/${id}`)
 export const APIUnbanUser = (id) => axios.post(`/api/admin/unban/${id}`)
 export const APIsendEmail = (id, messageTitle, message) => axios.post("/api/admin/sendEmail", {id, messageTitle, message})
 export const APIgetUser = (id) => axios.get(`/api/admin/user/${id}`)
+export const APIgetUsersStats = () => axios.get("/api/admin/stats/users")
+export const APIgetOrderssStats = () => axios.get("/api/admin/stats/orders")
+export const APIgetTopProduct = () => axios.get("/api/admin/stats/topProduct")
+export const APIgetTopUser = () => axios.get("/api/admin/stats/topUser")
+export const APIgetProductSales = (id) => axios.get(`/api/admin/stats/productSales/${id}`)
+
+

@@ -22,8 +22,7 @@ import { SelectPage } from '../redux/admin';
 
 const LinkItems = [
   { name: 'Users', icon: FiUser },
-  { name: 'Stats', icon: FiTrendingUp },
-  { name: 'Products', icon: GiClothes }
+  { name: 'Stats', icon: FiTrendingUp }
 ];
 
 export default function Sidebar({ children, setSelected }) {
@@ -83,7 +82,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
 
 const NavItem = ({ icon, children, ...rest }) => {
   return (
-    <Link  href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align="center"
         p="4"

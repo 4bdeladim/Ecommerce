@@ -20,7 +20,6 @@ const OrderSchema = new Schema({
     },
     date: {
         type: Date,
-        default: new Date(),
     },
     userID: {
         type:String,

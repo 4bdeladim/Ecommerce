@@ -191,3 +191,62 @@ export const GetUser = createAsyncThunk(
         }
     }
 )
+
+export const GetUsersStats = createAsyncThunk(
+    "admin/usersStats",
+    async () => {
+        try {
+            const { data } = await api.APIgetUsersStats()
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+export const GetOrderesStats = createAsyncThunk(
+    "admin/orderesStats",
+    async () => {
+        try {
+            const { data } = await api.APIgetOrderssStats()
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const GetTopProduct = createAsyncThunk(
+    "admin/topProduct",
+    async () => {
+        try {
+            const { data } = await api.APIgetTopProduct()
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const GetTopUser = createAsyncThunk(
+    "admin/topUser",
+    async () => {
+        try {
+            const { data } = await api.APIgetTopUser()
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)
+
+export const GetProductSales = createAsyncThunk(
+    "admin/productSales",
+    async (id) => {
+        try {
+            const { data } = await api.APIgetProductSales(id)
+            return data
+        } catch (error) {
+            throw error.response.data || "Something went wrong"
+        }
+    }
+)

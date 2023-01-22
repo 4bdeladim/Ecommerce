@@ -12,8 +12,10 @@ import order from "./routes/order.js"
 import checkout from "./routes/checkout.js"
 import cors from "cors"
 import path from "path"
+import adminStats from "./routes/admin/stats.js"
 import adminUsers from "./routes/admin/users.js"
 import adminProducts from "./routes/admin/products.js"
+
 
 dotenv.config();
 const app = express();  
@@ -41,6 +43,8 @@ app.use("/api/", order)
 app.use("/api/", checkout)
 app.use("/api/admin/", adminUsers)
 app.use("/api/admin/", adminProducts)
+app.use("/api/admin/stats", adminStats)
+
 
 
 app.get("*", (_, res) => {

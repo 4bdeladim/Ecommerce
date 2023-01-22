@@ -1,12 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit"
 import Swal from "sweetalert2"
-import { AddCategory, AddNewProduct, Ban, DeleteProduct, DeleteUser, EditUserInfo, GetProduct, GetUser, GetUsers, SendEmail, UnBan, UpdateProduct } from "./actions/admin"
+import { AddCategory, AddNewProduct, Ban, DeleteProduct, DeleteUser, EditUserInfo, GetOrderesStats, GetProduct, GetProductSales, GetTopProduct, GetTopUser, GetUser, GetUsers, GetUsersStats, SendEmail, UnBan, UpdateProduct } from "./actions/admin"
 
 const initialState = {
     users: [],
     user: {},
     orders: [],
     product: {},
+    stats: {
+        users:{
+            dailyUsers: 0,
+            finalList: []
+        },
+        orderes:{
+            finalList: [],
+            dialyorders: 0,
+            
+        },
+        topProduct: null,
+        topUser: {
+            topUser:null,
+            price: 0
+        },
+        productSales: {
+            dialyorders: 0,
+            finalList: [],
+            productName: null,
+            id: null
+        }
+    },
     selectedPage: "Users"
 }
 
@@ -157,6 +179,56 @@ export const adminSlice = createSlice({
                     icon:"error"
                 })
             })
+            .addCase(GetUsersStats.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.stats.users = action.payload
+                
+            })
+            .addCase(GetUsersStats.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            .addCase(GetOrderesStats.fulfilled, (state, action) => {
+                state.stats.orderes = action.payload
+            })
+            .addCase(GetOrderesStats.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            .addCase(GetProductSales.fulfilled, (state, action) => {
+                state.stats.productSales = action.payload
+            })
+            .addCase(GetProductSales.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            .addCase(GetTopProduct.fulfilled, (state, action) => {
+                state.stats.topProduct = action.payload
+            })
+            .addCase(GetTopProduct.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            .addCase(GetTopUser.fulfilled, (state, action) => {
+                state.stats.topUser = action.payload
+            })
+            .addCase(GetTopUser.rejected, (state, action) => {
+                Swal.fire({
+                    title: action.error,
+                    icon:"error"
+                })
+            })
+            
+
+
 
             
             

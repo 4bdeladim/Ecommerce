@@ -30,10 +30,6 @@ const UserSchema = new Schema({
         type:String,
         default: null
     },
-    orders: {
-        type: Array,
-        default: []
-    },
     cart: {
         type:Array,
         default: []
