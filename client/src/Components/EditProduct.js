@@ -1,25 +1,21 @@
-import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
+import { AddIcon, EditIcon } from '@chakra-ui/icons'
 import {
     AlertDialog,
     AlertDialogBody,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogContent,
+    AlertDialogFooter, AlertDialogContent,
     AlertDialogOverlay,
     useDisclosure,
     Button,
     FormControl,
     FormLabel,
-    Input,
-    IconButton,
-    Textarea,
+    Input, Textarea,
     Select,
     Stack,
     Image
 } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AddNewProduct, UpdateProduct } from '../redux/actions/admin'
+import { UpdateProduct } from '../redux/actions/admin'
 import { GetProduct } from '../redux/actions/admin'
 
 

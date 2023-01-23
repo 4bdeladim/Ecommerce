@@ -49,7 +49,6 @@ export default function Navbar() {
   const {loggedIn} = useSelector(state => state.auth)
   const location = useLocation()
   const [isSmallerthan767] = useMediaQuery("(max-width: 767px)")
-  
   return (
     <Box>
       <Flex
@@ -281,12 +280,12 @@ export default function Navbar() {
                     bg={'pink.400'}
                     p=".7rem 1rem"
                     textDecoration="none"
-                    to={'/signin'}
+                    to={location.pathname === "/signin" ? "/signup" : "/signin"}
                     _hover={{
                       bg: 'pink.300',
                     }}
                     >
-                    Sign In
+                      {location.pathname === "/signin" ? "Sign Up" : "Sign In"}
               </Button>
                 ) : (location.pathname.split("/")[1] === "products" ? <Link to="/">Home </Link> : "")
               }
